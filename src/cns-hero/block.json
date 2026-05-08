@@ -49,46 +49,29 @@
         "left": { "type": "string" }
       }
     },
-    "authorCredit": {
-      "type": "object",
-      "default": {
-        "isVisible": false,
-        "position": "bottom-right",
-        "color": "#ffffff",
-        "id": "",
-        "url": "",
-        "text": "The author",
-        "icon": "clouds"
-      },
-      "properties": {
-        "isVisible": { "type": "boolean" },
-        "position": { "type": "string" },
-        "color": { "type": "string" },
-        "id": { "type": "string" },
-        "url": { "type": "string" },
-        "text": { "type": "string" },
-        "icon": { "type": "string" }
-      }
-    },
-    "heroCredit": {
-      "type": "object",
-      "default": {
-        "isVisible": false,
-        "position": "bottom-left",
-        "color": "#ffffff",
-        "id": "",
-        "url": "",
-        "text": "The article",
-        "icon": "marker"
-      },
-      "properties": {
-        "isVisible": { "type": "boolean" },
-        "position": { "type": "string" },
-        "color": { "type": "string" },
-        "id": { "type": "string" },
-        "url": { "type": "string" },
-        "text": { "type": "string" },
-        "icon": { "type": "string" }
+    "creditItems": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id":       { "type": "string" },
+          "type":     { "type": "string" },
+          "url":      { "type": "string" },
+          "text":     { "type": "string" },
+          "position": { "type": "string" },
+          "color":    { "type": "string" },
+          "icon":     { "type": "string" },
+          "offset": {
+            "type": "object",
+            "properties": {
+              "top":    { "type": "string" },
+              "right":  { "type": "string" },
+              "bottom": { "type": "string" },
+              "left":   { "type": "string" }
+            }
+          }
+        }
       }
     }
   },

@@ -83,6 +83,7 @@ function register_cns_theme_blocks()
     register_block_type_from_metadata(__DIR__ . "/build/cns-header-nav");
     register_block_type_from_metadata(__DIR__ . "/build/cns-user-menu");
     register_block_type_from_metadata(__DIR__ . "/build/cns-sidebar");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-hero");
     // register_block_type_from_metadata(__DIR__ . "/build/footer");
     register_block_type_from_metadata(__DIR__ . "/build/banner");
     register_block_type_from_metadata(__DIR__ . "/build/slideshow");

@@ -1,46 +1,100 @@
 <?php
-$position = $attributes["contentPosition"] ?? "middle-center";
-$padding = $attributes["slidePadding"] ?? [
+// ── Content position ──────────────────────────────────────────────────────────
+$content_position = $attributes["contentPosition"] ?? "middle-center";
+[$v, $h] = explode("-", $content_position);
+
+// ── Mode / height ─────────────────────────────────────────────────────────────
+$mode = $attributes["mode"] ?? "unconstrained";
+$banner_height = $attributes["bannerHeight"] ?? null;
+
+// ── Background image ──────────────────────────────────────────────────────────
+$img_id = $attributes["bgImageID"] ?? 0;
+$img_url = $img_id
+    ? wp_get_attachment_image_url($img_id, "full")
+    : $attributes["bgImageURL"] ?? "";
+
+// ── Slide padding ─────────────────────────────────────────────────────────────
+$slide_padding = $attributes["slidePadding"] ?? [
     "top" => "0px",
     "right" => "0px",
     "bottom" => "0px",
     "left" => "0px",
 ];
 
-[$v, $h] = explode("-", $position);
-
+// ── Container props ───────────────────────────────────────────────────────────
 $container_props = [
     "align-items" =>
         $v === "top" ? "flex-start" : ($v === "bottom" ? "flex-end" : "center"),
     "justify-content" =>
         $h === "left" ? "flex-start" : ($h === "right" ? "flex-end" : "center"),
-    "padding-top" => $padding["top"] ?? "0px",
-    "padding-right" => $padding["right"] ?? "0px",
-    "padding-bottom" => $padding["bottom"] ?? "0px",
-    "padding-left" => $padding["left"] ?? "0px",
+    "padding-top" => $slide_padding["top"] ?? "0px",
+    "padding-right" => $slide_padding["right"] ?? "0px",
+    "padding-bottom" => $slide_padding["bottom"] ?? "0px",
+    "padding-left" => $slide_padding["left"] ?? "0px",
 ];
 
-$img_id = $attributes["bgImageID"] ?? 0;
-$img_url = $img_id
-    ? wp_get_attachment_image_url($img_id, "full")
-    : $attributes["bgImageURL"] ?? "";
 if ($img_url) {
     $container_props["background-image"] = "url(" . esc_url($img_url) . ")";
     $container_props["background-size"] = "cover";
     $container_props["background-position"] = "center";
 }
 
-$bg_color = $attributes["bgColor"] ?? "";
-if ($bg_color) {
-    $container_props["background-color"] = $bg_color;
+if ($mode === "fixed" && $banner_height) {
+    $container_props["height"] = $banner_height . "px";
+} elseif ($mode === "constrained" && $banner_height) {
+    $container_props["max-height"] = $banner_height . "px";
 }
+
+// ── Overlay props ─────────────────────────────────────────────────────────────
+$overlay_padding = $attributes["overlayPadding"] ?? [
+    "top" => "0px",
+    "right" => "0px",
+    "bottom" => "0px",
+    "left" => "0px",
+];
+$bg_color = $attributes["bgColor"] ?? "";
+
+$overlay_props = [
+    "padding-top" => $overlay_padding["top"] ?? "0px",
+    "padding-right" => $overlay_padding["right"] ?? "0px",
+    "padding-bottom" => $overlay_padding["bottom"] ?? "0px",
+    "padding-left" => $overlay_padding["left"] ?? "0px",
+    "background-color" => $bg_color ?: null,
+];
+
+// ── Credit items ──────────────────────────────────────────────────────────────
+$credit_items = $attributes["creditItems"] ?? [];
 ?>
-<div class="hero__container" style="<?php echo cns_generate_style_text(
-    $container_props,
-); ?>">
-    <div class="hero__overlay">
-        <?php echo $content; ?>
+<div <?php echo get_block_wrapper_attributes(); ?>>
+    <div class="hero__container" style="<?php echo cns_generate_style_text(
+        $container_props,
+    ); ?>">
+        <div class="wp-block-cns-theme-cns-hero-overlay">
+            <div class="hero__overlay" style="<?php echo cns_generate_style_text(
+                $overlay_props,
+            ); ?>">
+                <?php echo $content; ?>
+            </div>
+
+            <?php foreach ($credit_items as $item):
+                $item_props = cns_get_position_props(
+                    $item["position"] ?? "bottom-left",
+                    $item["offset"] ?? [],
+                ); ?>
+            <a
+                class="hero__credits"
+                href="<?php echo esc_url($item["url"] ?? ""); ?>"
+                style="<?php echo cns_generate_style_text($item_props); ?>"
+            >
+                <span style="color:<?php echo esc_attr(
+                    $item["color"] ?? "#ffffff",
+                ); ?>">
+                    <?php echo esc_html($item["text"] ?? ""); ?>
+                </span>
+            </a>
+            <?php
+            endforeach; ?>
+
+        </div>
     </div>
-    <a href="" class="hero__credits hero__credits--reference">Rozendale in the year HEM1</a>
-    <a href="" class="hero__credits hero__credits--author">Map by Eugene Jonathan</a>
 </div>

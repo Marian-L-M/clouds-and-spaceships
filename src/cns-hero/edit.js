@@ -42,13 +42,13 @@ const DEFAULT_OFFSET = {
   left: "1rem",
 };
 const DRAFT_DEFAULTS = {
+  id: "",
   type: "post",
-  url: null,
+  url: "",
+  text: "",
   position: "bottom-left",
   offset: DEFAULT_OFFSET,
   color: "#ffffff",
-  id: null,
-  text: "",
   icon: "marker",
 };
 
@@ -237,7 +237,7 @@ export default function Edit({ attributes, setAttributes }) {
     setDraft({
       id: item.id || String(Date.now()),
       type: item.type,
-      url: item.url || null,
+      url: item.url || "",
       text: item.text || "",
       position: item.position || "bottom-left",
       offset: item.offset || DEFAULT_OFFSET,
@@ -254,9 +254,9 @@ export default function Edit({ attributes, setAttributes }) {
 
   function saveItem() {
     const newItem = {
-      id: draft.id || null,
+      id: draft.id || String(Date.now()),
       type: draft.type,
-      url: draft.url || null,
+      url: draft.url || "",
       text: draft.text || "",
       position: draft.position || "bottom-left",
       offset: draft.offset || DEFAULT_OFFSET,
@@ -283,20 +283,13 @@ export default function Edit({ attributes, setAttributes }) {
     setIsModalOpen(false);
   }
 
+  console.log(creditItems);
+
   // ── Render helpers ────────────────────────────────────────────────────────────
 
   function renderCreditItem(item) {
     // Credit items need id
     const originalIndex = creditItems.findIndex((i) => i.id === item.id);
-    //     type: "post",
-    // url: null,
-    // position: "bottom-left",
-    // color: "#ffffff",
-    // id: null,
-    // text: "",
-    // icon: "marker",
-
-    // To do Render Classes and icons
 
     return (
       <Button
@@ -572,7 +565,7 @@ export default function Edit({ attributes, setAttributes }) {
 
       <div {...blockProps}>
         <div className="hero__container" style={containerStyle}>
-          <div className="wp-block-cns-theme-cns-hero-overlay">
+          <div className="hero__editor-overlay">
             <div className="hero__overlay" style={overlayStyle}>
               <InnerBlocks />
             </div>

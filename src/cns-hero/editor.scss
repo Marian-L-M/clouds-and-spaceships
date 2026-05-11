@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .wp-block-cns-theme-cns-hero,
-.wp-block-cns-theme-cns-hero-overlay {
+.hero__editor-overlay {
   box-sizing: border-box;
   padding: 1rem;
   max-width: 100%;
@@ -9,6 +9,6 @@
   border: 2px dashed greenyellow;
   width: 100%;
 }
-.wp-block-cns-theme-cns-hero-overlay {
+.hero__editor-overlay {
   outline: 2px dashed hsla(350, 100%, 88%, 0.8);
 }

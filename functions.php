@@ -95,5 +95,6 @@ function register_cns_theme_blocks()
     register_block_type_from_metadata(__DIR__ . "/build/sidebar");
     register_block_type_from_metadata(__DIR__ . "/build/cns-section");
     register_block_type_from_metadata(__DIR__ . "/build/cns-tab");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-table-of-contents");
 }
 add_action("init", "register_cns_theme_blocks");

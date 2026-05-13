@@ -1,6 +1,6 @@
 import { __ } from "@wordpress/i18n";
 import { useSelect } from "@wordpress/data";
-import { useState } from "@wordpress/element";
+import { useState, useEffect, useRef } from "@wordpress/element";
 import {
   InspectorControls,
   RichText,
@@ -9,8 +9,27 @@ import {
 } from "@wordpress/block-editor";
 import { PanelBody, SelectControl, ToggleControl } from "@wordpress/components";
 
+function slugify(str) {
+  return (str || "")
+    .replace(/<[^>]+>/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export default function Edit({ clientId, attributes, setAttributes }) {
-  const { title, titleLevel, showUnderline } = attributes;
+  const { title, titleLevel, showUnderline, anchor } = attributes;
+
+  // Auto-preset anchor from title unless the user has manually customised it
+  const prevAutoAnchor = useRef(slugify(title));
+  useEffect(() => {
+    const next = slugify(title);
+    if (!anchor || anchor === prevAutoAnchor.current) {
+      setAttributes({ anchor: next });
+    }
+    prevAutoAnchor.current = next;
+  }, [title]);
   const [activeTab, setActiveTab] = useState(0);
 
   const innerBlocks = useSelect(

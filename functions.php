@@ -93,5 +93,7 @@ function register_cns_theme_blocks()
     // register_block_type_from_metadata(__DIR__ . "/build/infobox-group");
     // register_block_type_from_metadata(__DIR__ . "/build/infobox-row");
     register_block_type_from_metadata(__DIR__ . "/build/sidebar");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-section");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-tab");
 }
 add_action("init", "register_cns_theme_blocks");

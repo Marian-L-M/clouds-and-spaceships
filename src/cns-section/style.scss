@@ -1,6 +1,10 @@
 @charset "UTF-8";
 
+.wp-block-cns-theme-cns-section {
+  width: 100%;
+}
 .cns-section {
+  width: 100%;
   &__title-container {
     padding-bottom: 0.75rem;
     margin-bottom: 1.5rem;
@@ -32,7 +36,9 @@
     font-size: inherit;
     font-weight: 600;
     line-height: 1.4;
-    transition: background 0.15s, color 0.15s;
+    transition:
+      background 0.15s,
+      color 0.15s;
 
     &.is-active {
       background: var(--wp--preset--color--background, #fff);

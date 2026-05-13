@@ -10,7 +10,8 @@
   "example": {},
   "supports": {
     "html": false,
-    "interactivity": true
+    "interactivity": true,
+    "anchor": true
   },
   "attributes": {
     "title":        { "type": "string", "default": "" },

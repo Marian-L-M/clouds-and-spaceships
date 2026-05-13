@@ -10,3 +10,5 @@
 - Do a best practice check for all blocks
 - Unify theme blocks into a single multiblock with shared assets (Constants, utility functions, src etc.)
 - Cleanup sidebar vibe logic, its a mess
+- Theme options page to:
+  - Enable author page

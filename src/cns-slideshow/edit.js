@@ -16,7 +16,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 
   const innerBlocksProps = useInnerBlocksProps(
     { className: "glide__slides" },
-    { allowedBlocks: ["cns-theme/slide"] }
+    { allowedBlocks: ["cns-theme/cns-slide"] }
   );
 
   useEffect(() => {

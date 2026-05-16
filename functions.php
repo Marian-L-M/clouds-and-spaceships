@@ -87,8 +87,8 @@ function register_cns_theme_blocks()
     register_block_type_from_metadata(__DIR__ . "/build/cns-hero");
     // register_block_type_from_metadata(__DIR__ . "/build/footer");
     register_block_type_from_metadata(__DIR__ . "/build/cns-banner");
-    register_block_type_from_metadata(__DIR__ . "/build/slideshow");
-    register_block_type_from_metadata(__DIR__ . "/build/slide");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-slideshow");
+    register_block_type_from_metadata(__DIR__ . "/build/cns-slide");
     // Migrated blocks
     // register_block_type_from_metadata(__DIR__ . "/build/infobox");
     // register_block_type_from_metadata(__DIR__ . "/build/infobox-group");

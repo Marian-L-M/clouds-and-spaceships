@@ -6,25 +6,7 @@ Run for development in two different terminals
 
 ```
 npm run start
-```
 
-Run to build out theme JS & SCSS functionality
-
-```
-npm run watchIndex
-```
-
-Run to build theme blocks
-
-```
-npm run buildBlocks
-npm run buildBlocks -- --watch
-```
-
-Run to build theme blocks and theme JS functionality
-
-```
-npm run build
 ```
 
 # Update Plan

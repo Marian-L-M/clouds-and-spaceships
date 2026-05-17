@@ -80,24 +80,9 @@ function register_cns_theme_blocks()
     wp_localize_script("wp-editor", "cnsThemeData", [
         "theme_uri" => get_stylesheet_directory_uri(),
     ]);
-    register_block_type_from_metadata(__DIR__ . "/build/cns-header");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-header-nav");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-user-menu");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-sidebar");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-hero");
-    // register_block_type_from_metadata(__DIR__ . "/build/footer");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-banner");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-slideshow");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-slide");
-    // Migrated blocks
-    // register_block_type_from_metadata(__DIR__ . "/build/infobox");
-    // register_block_type_from_metadata(__DIR__ . "/build/infobox-group");
-    // register_block_type_from_metadata(__DIR__ . "/build/infobox-row");
-    register_block_type_from_metadata(__DIR__ . "/build/sidebar");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-section");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-tab");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-table-of-contents");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-multi-image");
-    register_block_type_from_metadata(__DIR__ . "/build/cns-fancy-title");
+    wp_register_block_types_from_metadata_collection(
+        __DIR__ . "/build/blocks",
+        __DIR__ . "/build/blocks-manifest.php"
+    );
 }
 add_action("init", "register_cns_theme_blocks");

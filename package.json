@@ -14,15 +14,12 @@
   "author": "Marian Maschke",
   "main": "index.js",
   "scripts": {
-    "start": "wp-scripts start --experimental-modules",
-    "blocks": "wp-scripts start --experimental-modules",
+    "start": "concurrently \"npm run watchBlocks\" \"npm run watchIndex\"",
+    "watchBlocks": "wp-scripts start --blocks-manifest --experimental-modules",
+    "watchIndex": "wp-scripts start --config webpack.index.config.js",
     "build": "npm run buildIndex && npm run buildBlocks",
     "buildIndex": "wp-scripts build --config webpack.index.config.js",
-    "watchIndex": "wp-scripts start --config webpack.index.config.js",
-    "buildBlocks": "wp-scripts build --experimental-modules",
-    "dev": "wp-scripts start",
-    "devFast": "wp-scripts start",
-    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+    "buildBlocks": "wp-scripts build --blocks-manifest --experimental-modules"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.24.0",

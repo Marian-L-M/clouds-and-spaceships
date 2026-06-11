@@ -14,6 +14,37 @@ require get_theme_file_path("/functions/subscriber-settings.php");
 require get_theme_file_path("/functions/api-functions.php");
 require get_theme_file_path("/functions/design-functions.php");
 
+// Register the shared toast notification system so plugins can depend on it.
+function cns_register_toast(): void {
+    $toast_asset_file = get_template_directory() . '/build/toast.asset.php';
+    $toast_asset      = file_exists( $toast_asset_file )
+        ? require $toast_asset_file
+        : [ 'dependencies' => [], 'version' => '1.0' ];
+
+    wp_register_script(
+        'cns-toast',
+        get_template_directory_uri() . '/build/toast.js',
+        $toast_asset['dependencies'],
+        $toast_asset['version'],
+        true
+    );
+    wp_register_style(
+        'cns-toast',
+        get_template_directory_uri() . '/build/toast.css',
+        [],
+        $toast_asset['version']
+    );
+}
+add_action( 'init', 'cns_register_toast' );
+
+// Enqueue toast on frontend and in WP admin (so plugins can use it).
+function cns_enqueue_toast(): void {
+    wp_enqueue_script( 'cns-toast' );
+    wp_enqueue_style( 'cns-toast' );
+}
+add_action( 'wp_enqueue_scripts',    'cns_enqueue_toast' );
+add_action( 'admin_enqueue_scripts', 'cns_enqueue_toast' );
+
 // Load CSS&JS
 function load_project_files()
 {

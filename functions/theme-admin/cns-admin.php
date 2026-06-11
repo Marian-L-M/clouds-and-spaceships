@@ -23,6 +23,106 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// ── Theme settings helpers ────────────────────────────────────────────────────
+
+/**
+ * Returns a single value from the cns_theme_settings option array.
+ * Result is cached per request so get_option() is only called once.
+ */
+function cns_get_theme_setting( string $key, $default = null ) {
+    static $settings = null;
+    if ( null === $settings ) {
+        $settings = (array) get_option( 'cns_theme_settings', [] );
+    }
+    return array_key_exists( $key, $settings ) ? $settings[ $key ] : $default;
+}
+
+// ── Settings API registration ─────────────────────────────────────────────────
+
+add_action( 'admin_init', 'cns_admin_register_settings' );
+
+function cns_admin_register_settings(): void {
+    register_setting(
+        'cns_theme_settings_group',
+        'cns_theme_settings',
+        [ 'sanitize_callback' => 'cns_sanitize_theme_settings' ]
+    );
+}
+
+function cns_sanitize_theme_settings( $input ): array {
+    $input  = is_array( $input ) ? $input : [];
+    $output = [];
+
+    $output['subscriber_redirect_enabled'] = ! empty( $input['subscriber_redirect_enabled'] ) ? 1 : 0;
+    $raw_url                               = $input['subscriber_redirect_url'] ?? '/';
+    $output['subscriber_redirect_url']     = esc_url_raw( $raw_url ) ?: '/';
+    $output['login_logo_id']               = absint( $input['login_logo_id'] ?? 0 );
+    $output['login_bg_color']              = sanitize_hex_color( $input['login_bg_color'] ?? '' ) ?? '';
+    $output['login_bg_image_id']           = absint( $input['login_bg_image_id'] ?? 0 );
+
+    $public_types                 = array_keys( get_post_types( [ 'public' => true ] ) );
+    $raw_types                    = is_array( $input['search_post_types'] ?? null ) ? $input['search_post_types'] : [];
+    $output['search_post_types']  = array_values( array_intersect( array_map( 'sanitize_key', $raw_types ), $public_types ) );
+
+    $output['profile_page_id'] = absint( $input['profile_page_id'] ?? 0 );
+
+    return $output;
+}
+
+// ── Admin asset enqueue ───────────────────────────────────────────────────────
+
+add_action( 'admin_enqueue_scripts', 'cns_admin_enqueue_theme_assets' );
+
+function cns_admin_enqueue_theme_assets( string $hook ): void {
+    if ( ! str_contains( $hook, 'cns-settings' ) ) {
+        return;
+    }
+    wp_enqueue_media();
+    wp_add_inline_script( 'jquery', cns_admin_media_picker_js() );
+}
+
+function cns_admin_media_picker_js(): string {
+    return <<<'JS'
+(function ($) {
+    $(function () {
+        $('.cns-media-btn').on('click', function (e) {
+            e.preventDefault();
+            var btn      = $(this);
+            var inputId  = btn.data('input');
+            var imgId    = btn.data('preview');
+            var removeId = btn.data('remove');
+            var frame    = wp.media({
+                title:    btn.data('title') || 'Select Image',
+                button:   { text: 'Use this image' },
+                multiple: false,
+                library:  { type: 'image' },
+            });
+            frame.on('select', function () {
+                var att = frame.state().get('selection').first().toJSON();
+                $('#' + inputId).val(att.id);
+                $('#' + imgId).attr('src', att.url).show();
+                $('#' + removeId).show();
+                btn.text(btn.data('change-label') || 'Change image');
+            });
+            frame.open();
+        });
+
+        $('.cns-media-remove-btn').on('click', function (e) {
+            e.preventDefault();
+            var btn      = $(this);
+            var inputId  = btn.data('input');
+            var imgId    = btn.data('preview');
+            var pickerId = btn.data('picker');
+            $('#' + inputId).val('');
+            $('#' + imgId).attr('src', '').hide();
+            btn.hide();
+            $('#' + pickerId).text($('#' + pickerId).data('select-label') || 'Select image');
+        });
+    });
+})(jQuery);
+JS;
+}
+
 // ── Tab registry ──────────────────────────────────────────────────────────────
 
 /**

@@ -19,14 +19,24 @@
     "watchIndex": "wp-scripts start --config webpack.index.config.js",
     "build": "npm run buildIndex && npm run buildBlocks",
     "buildIndex": "wp-scripts build --config webpack.index.config.js",
-    "buildBlocks": "wp-scripts build --blocks-manifest --experimental-modules"
+    "buildBlocks": "wp-scripts build --blocks-manifest --experimental-modules",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.24.0",
+    "@types/wordpress__api-fetch": "^3.2.4",
+    "@types/wordpress__block-editor": "^15.0.6",
+    "@types/wordpress__blocks": "^15.10.2",
+    "@types/wordpress__components": "^23.0.12",
+    "@types/wordpress__data": "^6.0.2",
+    "@types/wordpress__html-entities": "^2.3.0",
+    "@types/wordpress__i18n": "^3.4.0",
+    "@wordpress/interactivity": "^6.48.1",
     "concurrently": "^9.2.1",
     "fast-glob": "^3.3.3",
     "prettier": "^3.6.2",
-    "sass": "^1.97.3"
+    "sass": "^1.97.3",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "@glidejs/glide": "^3.7.1",

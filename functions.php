@@ -117,3 +117,21 @@ function register_cns_theme_blocks()
     );
 }
 add_action("init", "register_cns_theme_blocks");
+
+// Editor UI styles (modals, panels, toolbars). Unlike add_editor_style(),
+// these load into the editor app shell where portaled UI like <Modal> lives,
+// and selectors are NOT rescoped under .editor-styles-wrapper.
+function cns_editor_ui_styles()
+{
+    $asset_file = get_template_directory() . "/build/editor.asset.php";
+    $asset = file_exists($asset_file)
+        ? require $asset_file
+        : ["dependencies" => [], "version" => "1.0"];
+    wp_enqueue_style(
+        "cns-editor-ui",
+        get_template_directory_uri() . "/build/editor.css",
+        [],
+        $asset["version"],
+    );
+}
+add_action("enqueue_block_editor_assets", "cns_editor_ui_styles");

@@ -9,11 +9,23 @@
   "description": "Custom header for CNS theme",
   "example": {},
   "supports": {
-    "html": false
+    "html": false,
+    "interactivity": true
+  },
+  "attributes": {
+    "backgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "textColor": {
+      "type": "string",
+      "default": ""
+    }
   },
   "textdomain": "cns-theme",
   "editorScript": "file:./index.js",
   "style": "file:./style-index.css",
   "editorStyle": "file:./index.css",
-  "render": "file:./render.php"
+  "render": "file:./render.php",
+  "viewScriptModule": "file:./view.js"
 }

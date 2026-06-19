@@ -1,20 +1,102 @@
 header {
-  position: sticky;
-  top: 0;
+  height: var(--wp--custom--header--mobile-pad-x, 2.4rem);
+}
+
+#mobile-search {
+  position: absolute;
+  bottom: 0;
   left: 0;
-  z-index: 1000;
+  padding: 0;
   width: 100%;
+  transform: translateY(100%);
+
+  // Collapsed by default; expanded when the header has `.search-open`.
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    visibility 0.25s;
+
+  form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media screen and (min-width: 576px) {
+    display: none;
+  }
 }
 
 .wp-block-cns-theme-cns-header {
+  .search-open #mobile-search {
+    max-height: 20rem;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// Mobile-only button that toggles #mobile-search via the Interactivity API.
+.mobile-search-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  width: 4rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  // Show the close icon (and hide search) only while the search is open.
+  .icon-close {
+    display: none;
+  }
+
+  @media screen and (max-width: 575.98px) {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    right: var(--wp--custom--header--mobile-pad-x, 2.4rem);
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+}
+
+.wp-block-cns-theme-cns-header.search-open .mobile-search-toggle {
+  .icon-search {
+    display: none;
+  }
+  .icon-close {
+    display: block;
+  }
+}
+
+.wp-block-cns-theme-cns-header {
+  position: relative;
   width: 100%;
   height: fit-content;
-  padding: 1rem 2.4rem;
+  padding: var(--wp--custom--header--mobile-pad-y, 1rem)
+    var(--wp--custom--header--mobile-pad-x, 2.4rem);
 
   background-color: var(--wp--preset--color--header-bg);
   border-bottom: 1px solid var(--wp--preset--color--element-contrast);
   color: var(--wp--preset--color--header-text);
   filter: drop-shadow(0px 2px 4px rgb(35 40 45 / 20%));
+  transition: filter 0.2s ease;
+
+  &.is-scrolled {
+    filter: drop-shadow(0px 4px 12px rgb(35 40 45 / 35%));
+  }
 }
 
 .header-layout {
@@ -40,14 +122,6 @@ header {
 }
 
 // Components
-#mobile-search {
-  display: block;
-
-  @media screen and (min-width: 576px) {
-    display: none;
-  }
-}
-
 #site-search {
   display: none;
   @media screen and (min-width: 768px) {
@@ -74,8 +148,6 @@ header {
 }
 
 // Sidemenu
-.has-modal-open {
-}
 .wp-block-navigation {
   &__responsive-container {
     // dev

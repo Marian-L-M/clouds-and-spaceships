@@ -160,7 +160,9 @@
         "mobile": "782px"
       },
       "header": {
-        "height": "5rem"
+        "height": "5rem",
+        "mobile-pad-x": "2.4rem",
+        "mobile-pad-y": "1rem"
       },
       "elements": {
         "toggle-width": "5rem",

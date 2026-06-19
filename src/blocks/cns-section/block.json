@@ -16,7 +16,8 @@
   "attributes": {
     "title":        { "type": "string", "default": "" },
     "titleLevel":   { "type": "string", "default": "h2" },
-    "showUnderline":{ "type": "boolean", "default": true }
+    "showUnderline":{ "type": "boolean", "default": true },
+    "anchor":       { "type": "string", "default": "" }
   },
   "textdomain": "cns-theme",
   "editorScript": "file:./index.js",

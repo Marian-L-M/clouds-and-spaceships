@@ -38,6 +38,9 @@
   }
 }
 @media screen and (max-width: 768px) {
+  .wp-block-cns-theme-cns-header-nav {
+    display: none;
+  }
   .cns-header__nav {
     justify-content: flex-end;
     &__links {

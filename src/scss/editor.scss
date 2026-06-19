@@ -1,3 +1,21 @@
-.wp-site-blocks {
-  padding: 2rem;
+// Global editor elements
+.cns-elements {
+  &__modal {
+    // .components-modal__content {}
+  }
+  &__modal-contents {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  &__modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
 }
+
+// .cns-header-nav__modal-overlay {
+//   background: rgba(0, 0, 0, 0.6);
+// }

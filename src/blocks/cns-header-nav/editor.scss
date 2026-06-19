@@ -1,10 +1,17 @@
-/**
- * The following styles get applied inside the editor only.
- *
- * Replace them with your own styles or remove the file completely.
- */
+// Unified
+.cns-elements__btn-outline {
+}
 
+//AI
 .wp-block-cns-theme-cns-header-nav {
-  border: 1px dotted #f00;
   align-self: stretch;
+  min-height: 3rem;
+
+  .cns-header__nav {
+    align-items: center;
+  }
+
+  .cns-header-nav__add-btn {
+    flex-shrink: 0;
+  }
 }

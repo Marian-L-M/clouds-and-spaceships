@@ -9,11 +9,37 @@ import type { BlockEditProps } from "@wordpress/blocks";
 import type { CSSProperties } from "react";
 import type { BlockTemplate } from "../../types/wordpress";
 import "./editor.scss";
+import { typography } from "@wordpress/icons";
 
 export type HeaderAttributes = {
   backgroundColor: string;
   textColor: string;
 };
+
+/** Seed links for the header nav. Editable per-instance in the editor afterwards. */
+const DEFAULT_NAV_ITEMS = [
+  {
+    id: "nav-support",
+    label: "Support",
+    url: "/support",
+    linkNewTab: false,
+    order: 0,
+  },
+  {
+    id: "nav-contribute",
+    label: "Contribute",
+    url: "/contribute",
+    linkNewTab: false,
+    order: 1,
+  },
+  {
+    id: "nav-discuss",
+    label: "Discuss",
+    url: "/discuss",
+    linkNewTab: false,
+    order: 2,
+  },
+];
 
 const TEMPLATE: BlockTemplate[] = [
   [
@@ -86,11 +112,15 @@ const TEMPLATE: BlockTemplate[] = [
             {
               anchor: "menu-wrapper",
               align: "full",
-              layout: { type: "flex", flexWrap: "nowrap" },
+              layout: {
+                type: "flex",
+                flexWrap: "nowrap",
+                justifyContent: "right",
+              },
               style: { spacing: { blockGap: "2rem" } },
             },
             [
-              ["cns-theme/cns-header-nav", {}, []],
+              ["cns-theme/cns-header-nav", { items: DEFAULT_NAV_ITEMS }, []],
               [
                 "core/navigation",
                 {
@@ -98,41 +128,51 @@ const TEMPLATE: BlockTemplate[] = [
                   overlayMenu: "always",
                   overlayBackgroundColor: "header-bg",
                   overlayTextColor: "header-text",
+                  style: {
+                    typography: {
+                      fontSize: "1.8rem",
+                      fontWeight: "600",
+                      lineHeight: "1.8",
+                    },
+                    spacing: {
+                      blockGap: "2rem",
+                      padding: {
+                        top: "2rem",
+                        right: "2rem",
+                        bottom: "2rem",
+                        left: "2rem",
+                      },
+                    },
+                  },
                 },
+                [
+                  [
+                    "core/search",
+                    {
+                      label: "Search",
+                      showLabel: false,
+                      placeholder: "Search...",
+                      buttonText: "Search",
+                      buttonPosition: "button-inside",
+                      buttonUseIcon: true,
+                      isSearchFieldHidden: false,
+                      width: 100,
+                      widthUnit: "%",
+                      backgroundColor: "element-bg",
+                      textColor: "text-soft",
+                      fontSize: "small",
+                      style: {
+                        typography: {
+                          fontWeight: "400",
+                        },
+                      },
+                    },
+                  ],
+                ],
               ],
             ],
           ],
         ],
-      ],
-    ],
-  ],
-  [
-    "core/group",
-    {
-      anchor: "mobile-search",
-      className: "mobile-only",
-      tagName: "div",
-      layout: { type: "constrained" },
-    },
-    [
-      [
-        "core/search",
-        {
-          label: "Search",
-          showLabel: false,
-          placeholder: "Search...",
-          buttonText: "Search",
-          buttonPosition: "button-inside",
-          buttonUseIcon: true,
-          isSearchFieldHidden: false,
-          width: 100,
-          widthUnit: "%",
-
-          align: "center",
-          backgroundColor: "element-bg",
-          fontSize: "small",
-          textColor: "text-soft",
-        },
       ],
     ],
   ],

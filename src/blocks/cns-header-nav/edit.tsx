@@ -85,8 +85,7 @@ export default function Edit({
 
   function saveItem() {
     const newItem: NavItem = {
-      id:
-        editingIndex !== null ? items[editingIndex].id : String(Date.now()),
+      id: editingIndex !== null ? items[editingIndex].id : String(Date.now()),
       label: draft.label,
       url: draft.url,
       linkNewTab: draft.linkNewTab,
@@ -290,6 +289,15 @@ export default function Edit({
               </li>
             );
           })}
+          {items.length == 0 && (
+            <Button
+              variant="secondary"
+              label={__("Add link", "cns-theme")}
+              onClick={openAddModal}
+            >
+              {__("Click to add link", "cns-theme")}
+            </Button>
+          )}
         </ul>
       </nav>
     </div>

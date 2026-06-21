@@ -6,10 +6,10 @@ interface HeaderContext {
 
 store("cns-theme/cns-header", {
   actions: {
-    toggleSearch() {
-      const context = getContext<HeaderContext>();
-      context.isSearchOpen = !context.isSearchOpen;
-    },
+    // toggleSearch() {
+    //   const context = getContext<HeaderContext>();
+    //   context.isSearchOpen = !context.isSearchOpen;
+    // },
   },
   callbacks: {
     trackScroll() {

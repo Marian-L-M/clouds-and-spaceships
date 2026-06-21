@@ -1,20 +1,11 @@
 @charset "UTF-8";
 
-// // .slideshow {
-// //   &__slide {
-// //     aspect-ratio: 5 / 1;
-// //   }
-// // }
-
-// .slideshow__container {
-//   display: flex;
-//   flex-direction: column;
-// }
 .wp-block-cns-theme-cns-hero {
   width: 100%;
 }
 .hero {
   &__container {
+    margin-top: var(--wp--custom--header--mobile-pad-x, 2.4rem);
     display: flex;
     position: relative;
     width: 100%;

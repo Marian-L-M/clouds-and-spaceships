@@ -46,6 +46,15 @@ header {
     }
   }
 }
+
+// Search
+#site-search {
+  display: none;
+  @media screen and (min-width: 768px) {
+    display: block;
+  }
+}
+
 // Sidemenu
 .wp-block-navigation {
   &__responsive-container {

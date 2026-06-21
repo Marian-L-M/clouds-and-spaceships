@@ -83,6 +83,7 @@ const TEMPLATE: BlockTemplate[] = [
               [
                 "core/search",
                 {
+                  anchor: "site-search",
                   label: "Search",
                   showLabel: false,
                   placeholder: "Search...",
@@ -96,7 +97,7 @@ const TEMPLATE: BlockTemplate[] = [
                   backgroundColor: "element-bg",
                   fontSize: "small",
                   textColor: "text-soft",
-                  style: { spacing: { padding: "0 0 0 10rem", margin: "0" } },
+                  style: { spacing: { padding: "0 0 0 0", margin: "0" } },
                 },
               ],
             ],

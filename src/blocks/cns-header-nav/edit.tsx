@@ -265,7 +265,7 @@ export default function Edit({
             return (
               <li key={item.id} className="cns-header__nav__item">
                 <Button
-                  variant="tertiary"
+                  className="cns-elements__edit-btn"
                   size="default"
                   onClick={() => openEditModal(originalIndex)}
                 >

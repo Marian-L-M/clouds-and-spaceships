@@ -93,12 +93,17 @@
           "style": false,
           "width": false
         }
+      },
+      "cns-theme/cns-sidebar": {
+        "color": {
+          "text": true
+        }
       }
     },
     "color": {
       "background": true,
-      "text": false,
-      "link": false,
+      "text": true,
+      "link": true,
       "custom": true,
       "defaultPalette": false,
       "duotone": [],

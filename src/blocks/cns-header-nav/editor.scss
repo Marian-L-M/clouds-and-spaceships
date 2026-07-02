@@ -4,22 +4,6 @@
 .cns-header__nav__item {
   position: relative;
 }
-.cns-elements {
-  &__edit-btn {
-    svg {
-      display: none;
-      position: absolute;
-      right: 0;
-    }
-    &:hover {
-      padding-right: 2em;
-      svg {
-        display: block;
-        width: 1.8em;
-      }
-    }
-  }
-}
 //AI
 .wp-block-cns-theme-cns-header-nav {
   align-self: stretch;

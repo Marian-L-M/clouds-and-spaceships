@@ -1,7 +1,12 @@
 <?php
 // Subscriber functionality
 
-function redirectSubsToFrontend(): void {
+function cns_redirect_subscribers_to_frontend(): void {
+    // admin_init also fires for AJAX/cron requests — redirecting those would
+    // break frontend AJAX for logged-in subscribers.
+    if ( wp_doing_ajax() || wp_doing_cron() ) {
+        return;
+    }
     if ( ! cns_get_theme_setting( 'subscriber_redirect_enabled', false ) ) {
         return;
     }
@@ -13,4 +18,4 @@ function redirectSubsToFrontend(): void {
     }
 }
 
-add_action( 'admin_init', 'redirectSubsToFrontend' );
+add_action( 'admin_init', 'cns_redirect_subscribers_to_frontend' );

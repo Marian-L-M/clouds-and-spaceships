@@ -1,21 +1,49 @@
 // Global editor elements
 .cns-elements {
+  // Buttons
+  &__btn {
+    position: relative;
+    svg {
+      display: none;
+      position: absolute;
+      right: 0;
+    }
+    &:hover {
+      padding-right: 1.6em;
+      svg {
+        color: gray;
+        display: block;
+        border: 1px solid currentColor;
+        padding: 0.1em;
+        width: 1.2em;
+        height: 1.2em;
+      }
+    }
+  }
+  &__add-btn {
+  }
+  &__edit-btn {
+  }
+  &__delete-btn {
+  }
+  // Modals
   &__modal {
     // .components-modal__content {}
   }
   &__modal-contents {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
   }
   &__modal-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 1rem 0.25rem;
+    margin-top: 0.5rem;
+  }
+  @media screen and (min-width: 768px) {
+    &__modal {
+      min-width: 576px;
+    }
   }
 }
-
-// .cns-header-nav__modal-overlay {
-//   background: rgba(0, 0, 0, 0.6);
-// }

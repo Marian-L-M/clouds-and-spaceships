@@ -5,22 +5,32 @@
   "version": "0.1.0",
   "title": "CNS Sidebar",
   "category": "design",
-  "icon": "sidebar",
+  "icon": "menu",
   "description": "Sidebar navigation block with fixed and toggle display modes",
   "example": {},
   "supports": {
     "html": false,
-    "interactivity": true
+    "interactivity": true,
+    "color": {
+      "background": true,
+      "text": true,
+      "__experimentalSkipSerialization": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
+    }
   },
   "attributes": {
     "placement": { "type": "string", "default": "left" },
-    "mode":      { "type": "string", "default": "fixed" },
-    "items":     { "type": "array",  "default": [] }
+    "mode": { "type": "string", "default": "fixed" },
+    "maxWidth": { "type": "string", "default": "" },
+    "items": { "type": "array", "default": [] }
   },
   "textdomain": "cns-theme",
   "editorScript": "file:./index.js",
-  "editorStyle":  "file:./index.css",
-  "style":        "file:./style-index.css",
-  "render":       "file:./render.php",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
   "viewScriptModule": "file:./view.js"
 }

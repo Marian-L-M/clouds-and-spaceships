@@ -1,12 +1,27 @@
 <?php
+// Site-wide search endpoint: GET /wp-json/all/v1/search?keyword=…
+// Returns published, searchable posts grouped by post type.
 
-add_action( 'rest_api_init', 'themeRegisterAllCptSearch' );
+add_action( 'rest_api_init', 'cns_register_search_route' );
 
-function themeRegisterAllCptSearch(): void {
+function cns_register_search_route(): void {
     register_rest_route( 'all/v1', 'search', [
-        'methods'             => WP_REST_SERVER::READABLE,
-        'callback'            => 'allSearchResults',
+        'methods'             => WP_REST_Server::READABLE,
+        'callback'            => 'cns_search_results',
         'permission_callback' => '__return_true',
+        'args'                => [
+            'keyword' => [
+                'type'              => 'string',
+                'default'           => '',
+                'sanitize_callback' => 'sanitize_text_field',
+            ],
+            'per_page' => [
+                'type'    => 'integer',
+                'default' => 10,
+                'minimum' => 1,
+                'maximum' => 50,
+            ],
+        ],
     ] );
 }
 
@@ -23,15 +38,19 @@ function cns_search_get_post_data(): array {
     ];
 }
 
-function allSearchResults( WP_REST_Request $data ): array {
+function cns_search_results( WP_REST_Request $request ): array {
     $allowed      = (array) cns_get_theme_setting( 'search_post_types', [] );
     $search_types = ! empty( $allowed )
         ? $allowed
-        : array_keys( get_post_types( [ 'public' => true ] ) );
+        // Public types that haven't opted out of search (also drops attachments).
+        : array_keys( get_post_types( [ 'public' => true, 'exclude_from_search' => false ] ) );
 
     $entries = new WP_Query( [
-        'post_type' => $search_types,
-        's'         => sanitize_text_field( $data['keyword'] ),
+        'post_type'      => array_values( $search_types ),
+        's'              => $request['keyword'],
+        'posts_per_page' => (int) $request['per_page'],
+        'post_status'    => 'publish',
+        'no_found_rows'  => true,
     ] );
 
     $results = array_fill_keys( $search_types, [] );
@@ -47,21 +66,4 @@ function allSearchResults( WP_REST_Request $data ): array {
     wp_reset_postdata();
 
     return $results;
-}
-
-function themeRegisterWikiSearch(): void {
-    register_rest_route( 'wiki/v1', 'search', [
-        'methods'             => WP_REST_SERVER::READABLE,
-        'callback'            => 'wikiSearchResults',
-        'permission_callback' => '__return_true',
-    ] );
-}
-
-function wikiSearchResults( WP_REST_Request $data ): array {
-    $entries = new WP_Query( [
-        'post_type' => 'wiki',
-        's'         => sanitize_text_field( $data['keyword'] ),
-    ] );
-
-    return $entries->posts;
 }

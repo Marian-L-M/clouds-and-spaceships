@@ -13,7 +13,6 @@ function cns_create_preset_pages()
             'post_title'  => 'Profile',
             'post_name'   => 'profile',
             'post_status' => 'publish',
-            'post_author' => 1,
         ]);
 
         if ($page_id && !is_wp_error($page_id)) {

@@ -9,11 +9,46 @@ $top_level = array_values(
     array_filter($items, fn($i) => empty($i["parentId"])),
 );
 
+// ── Color support (background + text) ────────────────────────────────────────
+// Resolve the chosen colors into scoped custom properties on the sidebar root.
+// Preset colors map to the theme's CSS variables; custom colors pass through as
+// raw values. The block's own SCSS consumes these (with fallbacks), so colors
+// flow through the sidebar's design tokens instead of relying on WordPress's
+// global `has-*` utility classes and their `!important` cascade.
+$sanitize_slug = fn($slug) => preg_replace("/[^a-z0-9-]/", "", strtolower($slug));
+
+$bg_slug = $sanitize_slug($attributes["backgroundColor"] ?? "");
+$text_slug = $sanitize_slug($attributes["textColor"] ?? "");
+$custom_bg = $attributes["style"]["color"]["background"] ?? "";
+$custom_text = $attributes["style"]["color"]["text"] ?? "";
+
+$bg_value = $bg_slug ? "var(--wp--preset--color--$bg_slug)" : $custom_bg;
+$text_value = $text_slug ? "var(--wp--preset--color--$text_slug)" : $custom_text;
+
+$css_vars = [];
+if ($bg_value) {
+    $css_vars[] = "--cns-sb-bg:" . $bg_value;
+}
+if ($text_value) {
+    $css_vars[] = "--cns-sb-text:" . $text_value;
+}
+
+// Max width: accept only a number plus a known CSS unit so the value can't
+// smuggle arbitrary declarations into the inline style attribute.
+$max_width = $attributes["maxWidth"] ?? "";
+if ($max_width && preg_match('/^\d+(\.\d+)?(px|rem|em|%|vw|vh)$/', $max_width)) {
+    $css_vars[] = "--cns-sb-max-width:" . $max_width;
+}
+
 $wrapper_class = implode(" ", [
     "cns-sidebar",
     "cns-sidebar--" . esc_attr($placement),
     "cns-sidebar--" . esc_attr($mode),
 ]);
+
+$style_attr = $css_vars
+    ? ' style="' . esc_attr(implode(";", $css_vars)) . '"'
+    : "";
 
 // Closure avoids redeclaration when multiple sidebar blocks are on one page
 $render_item = function (array $item, array $all_items) use (
@@ -83,7 +118,7 @@ $context = esc_attr(
 );
 ?>
 <aside
-  class="<?php echo $wrapper_class; ?>"
+  class="<?php echo $wrapper_class; ?>"<?php echo $style_attr; ?>
   data-wp-interactive="cns-theme/cns-sidebar"
   data-wp-context='<?php echo $context; ?>'
   data-wp-class--is-open="context.isOpen"

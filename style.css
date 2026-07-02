@@ -4,9 +4,11 @@ Theme URI: https://cloudsandspaceships.com/
 Author: Marian@Namatamago
 Author URI: https://namatamago.dev/
 Description: A wiki style wordpress theme designed to integrate with the Clouds and Spaceships Map Making plugin.
-Tags: wiki, maps, maps, worldbuilding, interactive images, glossary, storytelling, stories, visualizing, fantasy, sci-fi
-Version: 1.0
-Requires PHP: 8.4
+Tags: wiki, maps, worldbuilding, interactive images, glossary, storytelling, stories, visualizing, fantasy, sci-fi
+Version: 1.1
+Requires at least: 6.8
+Tested up to: 6.9
+Requires PHP: 8.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: cns-theme

@@ -24,145 +24,15 @@
   // Modal
   &__modal {
   }
-
+  &__sub-links {
+    display: flex !important;
+  }
   // Groups
   &__item {
   }
   &__item--group {
     .cns-elements__btn {
       width: 100%;
-      border-bottom: 1px solid currentColor;
     }
   }
 }
-//   border: 1px dotted #07f;
-//   padding: 1rem;
-//   min-height: 4rem;
-
-//   // Editor-only tint, but defer to a user-chosen background color
-//   &:not(.has-background) {
-//     background-color: #f5faff;
-//   }
-
-//   // Nav items render as <Button> components in the editor; let their labels
-//   // follow the chosen text color so the preview matches the front end.
-//   .cns-sidebar__item .components-button {
-//     color: var(--cns-sb-text, inherit);
-//   }
-
-//   // Show toggle button placeholder inline in editor
-//   .cns-sidebar__float-toggle-btn {
-//     position: static;
-//     transform: none;
-//     margin-bottom: 0.5rem;
-//     opacity: 0.6;
-//     pointer-events: none;
-//   }
-
-//   .cns-sidebar__panel {
-//     position: static;
-//     transform: none;
-//     width: 100%;
-//     padding: 0;
-//     box-shadow: none;
-//   }
-
-//   .cns-sidebar__mobile-toggle {
-//     display: flex; // always show in editor regardless of viewport
-//   }
-
-//   // Quick select list
-//   .cns-sidebar__quick-select {
-//     margin-top: 1rem;
-//     padding-top: 1rem;
-//     border-top: 1px solid #ddd;
-
-//     &-heading {
-//       font-weight: 600;
-//       font-size: 0.8125rem;
-//       margin-bottom: 0.5rem;
-//     }
-
-//     &-list {
-//       max-height: 200px;
-//       overflow-y: auto;
-//       border: 1px solid #ddd;
-//       border-radius: 2px;
-//     }
-
-//     &-item {
-//       display: block;
-//       width: 100%;
-//       padding: 0.5rem 0.75rem;
-//       text-align: left;
-//       background: none;
-//       border: none;
-//       border-bottom: 1px solid #eee;
-//       cursor: pointer;
-//       font-size: 0.875rem;
-
-//       &:last-child { border-bottom: none; }
-//       &:hover { background: #f0f6ff; }
-//     }
-
-//     &-status {
-//       padding: 0.5rem 0.75rem;
-//       font-size: 0.875rem;
-//       color: #888;
-//     }
-//   }
-
-//   // Order controls
-//   .cns-sidebar__order-controls {
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-between;
-//     margin-top: 1rem;
-//     padding-top: 1rem;
-//     border-top: 1px solid #ddd;
-//   }
-
-//   .cns-sidebar__order-label {
-//     font-size: 0.8125rem;
-//     color: #555;
-//   }
-
-//   .cns-sidebar__order-buttons {
-//     display: flex;
-//     gap: 4px;
-//   }
-
-//   // Modal actions row
-//   .cns-sidebar__modal-actions {
-//     display: flex;
-//     gap: 8px;
-//     margin-top: 1.5rem;
-//     padding-top: 1rem;
-//     border-top: 1px solid #ddd;
-//     align-items: center;
-
-//     .components-button.is-destructive {
-//       margin-left: auto;
-//     }
-//   }
-
-//   // URL field spacing
-//   .cns-sidebar__url-field {
-//     margin-bottom: 1rem;
-
-//     .components-base-control__label {
-//       display: block;
-//       margin-bottom: 4px;
-//       font-weight: 500;
-//       font-size: 0.8125rem;
-//     }
-//   }
-
-//   // Empty state
-//   .cns-sidebar__empty {
-//     padding: 0.5rem 0;
-//     color: #888;
-//     font-style: italic;
-//     font-size: 0.875rem;
-//   }
-// }

@@ -24,7 +24,7 @@
   "attributes": {
     "placement": { "type": "string", "default": "left" },
     "mode": { "type": "string", "default": "fixed" },
-    "maxWidth": { "type": "string", "default": "" },
+    "width": { "type": "string", "default": "" },
     "items": { "type": "array", "default": [] }
   },
   "textdomain": "cns-theme",

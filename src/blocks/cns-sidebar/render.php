@@ -33,11 +33,11 @@ if ($text_value) {
     $css_vars[] = "--cns-sb-text:" . $text_value;
 }
 
-// Max width: accept only a number plus a known CSS unit so the value can't
+// Max : accept only a number plus a known CSS unit so the value can't
 // smuggle arbitrary declarations into the inline style attribute.
-$max_width = $attributes["maxWidth"] ?? "";
-if ($max_width && preg_match('/^\d+(\.\d+)?(px|rem|em|%|vw|vh)$/', $max_width)) {
-    $css_vars[] = "--cns-sb-max-width:" . $max_width;
+$width = $attributes["width"] ?? "";
+if ($width && preg_match('/^\d+(\.\d+)?(px|rem|em|%|vw|vh)$/', $width)) {
+    $css_vars[] = "--cns-sb-width:" . $width;
 }
 
 $wrapper_class = implode(" ", [

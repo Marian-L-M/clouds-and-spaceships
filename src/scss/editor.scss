@@ -6,12 +6,12 @@
     svg {
       display: none;
       position: absolute;
-      right: 0;
+      right: -1.2em;
     }
     &:hover {
       padding-right: 1.6em;
       svg {
-        color: gray;
+        color: currentColor;
         display: block;
         border: 1px solid currentColor;
         padding: 0.1em;

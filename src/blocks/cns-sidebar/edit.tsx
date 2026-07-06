@@ -53,7 +53,7 @@ type SidebarDraft = Omit<SidebarItem, "id" | "groupDefaultOpen"> & {
 export type SidebarAttributes = {
   placement: string;
   mode: string;
-  maxWidth?: string;
+  width?: string;
   items: SidebarItem[];
   // Added implicitly by the block's color support (block.json `supports.color`)
   backgroundColor?: string;
@@ -78,12 +78,12 @@ const SYSTEM_POST_TYPES = [
 ];
 
 // Max-width slider bounds (px). Mirrors the cns-hero height control.
-const MAX_WIDTH_MIN = 240;
-const MAX_WIDTH_MAX = 1280;
-const MAX_WIDTH_STEP = 10;
+const WIDTH_MIN = 240;
+const WIDTH_MAX = 1280;
+const WIDTH_STEP = 10;
 
 /** Pull the numeric (px) part out of a stored length like "640px". */
-function parseMaxWidthPx(value: string | undefined): number | undefined {
+function parseWidthPx(value: string | undefined): number | undefined {
   const match = (value ?? "").match(/^(\d*\.?\d+)/);
   return match ? parseFloat(match[1]) : undefined;
 }
@@ -102,19 +102,9 @@ export default function Edit({
   attributes,
   setAttributes,
 }: BlockEditProps<SidebarAttributes>) {
-  const {
-    items,
-    placement,
-    mode,
-    maxWidth,
-    backgroundColor,
-    textColor,
-    style,
-  } = attributes;
+  const { items, placement, mode, width, backgroundColor, textColor, style } =
+    attributes;
 
-  // Mirror render.php: expose the chosen colors and max width as scoped custom
-  // properties so the editor preview matches the front end. Preset colors map to
-  // theme CSS variables; custom colors pass through as raw values.
   const bgValue = backgroundColor
     ? `var(--wp--preset--color--${backgroundColor})`
     : style?.color?.background;
@@ -124,11 +114,11 @@ export default function Edit({
   const styleVars = {
     ...(bgValue ? { "--cns-sb-bg": bgValue } : {}),
     ...(textValue ? { "--cns-sb-text": textValue } : {}),
-    ...(maxWidth ? { "--cns-sb-max-width": maxWidth } : {}),
+    ...(width ? { "--cns-sb-width": width } : {}),
   } as CSSProperties;
 
-  // Drive the slider from the numeric (px) part of the stored maxWidth.
-  const maxWidthAmount = parseMaxWidthPx(maxWidth);
+  // Drive the slider from the numeric (px) part of the stored width.
+  const widthAmount = parseWidthPx(width);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -318,10 +308,11 @@ export default function Edit({
         }`}
       >
         <Button
-          className="cns-elements__btn cns-elements__edit-btn"
+          className={`cns-elements__btn cns-elements__edit-btn ${
+            isGroup ? "cns-sidebar__group-toggle" : ""
+          }`}
           onClick={() => openEditModal(originalIndex)}
         >
-          {isGroup ? "▼" : ""}
           {item.label || __("(untitled)", "cns-theme")}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -348,11 +339,24 @@ export default function Edit({
                   className="cns-sidebar__item cns-sidebar__item--child"
                 >
                   <Button
-                    variant="tertiary"
+                    className="cns-elements__btn cns-elements__edit-btn"
                     onClick={() => openEditModal(childIndex)}
                   >
                     {child.label || __("(untitled)", "cns-theme")}
-                    Click to edit child
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+                      <path d="m15 5 4 4" />
+                    </svg>
                   </Button>
                 </li>
               );
@@ -392,8 +396,10 @@ export default function Edit({
               label={__("Display mode", "cns-theme")}
               value={mode}
               options={[
-                { label: "Fixed (always visible)", value: "fixed" },
-                { label: "Toggle (overlay)", value: "toggle" },
+                { label: "Fixed", value: "fixed" },
+                { label: "Fixed - Hide on Mobile", value: "fixed-no-mobile" },
+                { label: "Toggle", value: "toggle" },
+                { label: "Toggle - Hide on Mobile", value: "toggle-no-mobile" },
               ]}
               onChange={(value) => setAttributes({ mode: value })}
               __next40pxDefaultSize
@@ -401,13 +407,13 @@ export default function Edit({
           </PanelRow>
           <RangeControl
             label={__("Max width (px)", "cns-theme")}
-            value={maxWidthAmount}
-            min={MAX_WIDTH_MIN}
-            max={MAX_WIDTH_MAX}
-            step={MAX_WIDTH_STEP}
+            value={widthAmount}
+            min={WIDTH_MIN}
+            max={WIDTH_MAX}
+            step={WIDTH_STEP}
             onChange={(value) =>
               setAttributes({
-                maxWidth: value === undefined ? "" : `${value}px`,
+                width: value === undefined ? "" : `${value}px`,
               })
             }
             __next40pxDefaultSize

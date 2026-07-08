@@ -19,6 +19,7 @@
   padding: 0 1rem;
   overflow-y: scroll;
   &__wrapper {
+    min-height: 40rem;
     padding: 0;
     gap: 0;
     align-self: stretch;
@@ -44,7 +45,7 @@
   }
   &__center {
     order: 3;
-    padding: 2rem 0 0 0;
+    padding: 2rem 1rem;
     h1 {
       margin-bottom: 2rem;
     }

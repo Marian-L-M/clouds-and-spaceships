@@ -31,12 +31,16 @@ $breakpoint-mobile: 782px;
   max-width: 100%;
   a,
   button {
+    display: flex;
     appearance: none;
     border: unset;
     background-color: unset;
     color: var(--cns-sb-text, #000) !important;
     padding: 0;
     width: 100%;
+    &:hover {
+      background-color: #00000005;
+    }
   }
   button {
     font-size: 1.8rem;
@@ -46,6 +50,7 @@ $breakpoint-mobile: 782px;
     &.cns-sidebar__group-toggle {
       position: relative;
       border-bottom: 1px solid currentColor;
+      padding-right: 2em;
       &::after {
         content: "";
         position: absolute;
@@ -167,8 +172,12 @@ $breakpoint-mobile: 782px;
     height: 100%;
     min-height: calc(100vh - var(--wp--custom--header--height, 5rem));
     width: var(--cns-sb-width, 40rem);
-    &__mobile-toggle {
-      display: none;
+    a,
+    button {
+      text-align: start;
+      &.cns-sidebar__mobile-toggle {
+        display: none;
+      }
     }
   }
 }

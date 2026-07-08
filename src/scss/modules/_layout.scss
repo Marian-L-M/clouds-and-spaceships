@@ -68,7 +68,7 @@
 // User breakpoint mixin instead?
 @media screen and (min-width: var.$bp-mobile) {
   #cns-layout-wrapper {
-    height: calc(100vh - var(--wp--custom--header--height, 5rem));
+    overflow-y: scroll;
   }
   .cns-col {
     order: unset;

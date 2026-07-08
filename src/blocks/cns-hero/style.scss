@@ -5,13 +5,14 @@
 }
 .hero {
   &__container {
-    margin-top: var(--wp--custom--header--mobile-pad-x, 2.4rem);
     display: flex;
     position: relative;
     width: 100%;
     height: 100vh;
   }
   &__overlay {
+    display: flex;
+    flex-direction: column;
   }
   &__credits {
     position: absolute;

@@ -30,10 +30,17 @@
     "useRootPaddingAwareAlignments": true,
     "appearanceTools": true,
     "spacing": {
-      "blockGap": true
+      "blockGap": true,
+      "spacingScale": {
+        "operator": "*",
+        "increment": 1.5,
+        "steps": 7,
+        "mediumStep": 1.5,
+        "unit": "rem"
+      }
     },
     "layout": {
-      "contentSize": "92%",
+      "contentSize": "min(92%, 1200px)",
       "wideSize": "1600px"
     },
     "typography": {
@@ -127,7 +134,7 @@
           "name": "Background"
         },
         {
-          "slug": "text",
+          "slug": "text-strong",
           "color": "#000000",
           "name": "Text"
         },
@@ -203,6 +210,9 @@
     }
   },
   "styles": {
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--monospace)"
+    },
     "blocks": {
       "core/button": {
         "color": {
@@ -220,8 +230,8 @@
         "right": "0"
       },
       "padding": {
-        "left": "var(--wp--preset--spacing--50, 1rem)",
-        "right": "var(--wp--preset--spacing--50, 1rem)"
+        "left": "var(--wp--preset--spacing--50)",
+        "right": "var(--wp--preset--spacing--50)"
       }
     }
   }

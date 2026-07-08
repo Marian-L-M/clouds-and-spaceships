@@ -53,13 +53,27 @@ $overlay_padding = $attributes["overlayPadding"] ?? [
     "left" => "0px",
 ];
 $bg_color = $attributes["bgColor"] ?? "";
+$overlay_max_width = $attributes["overlayMaxWidth"] ?? "";
+$content_gap = $attributes["contentGap"] ?? "0px";
 
-$overlay_props = [
-    "padding-top" => $overlay_padding["top"] ?? "0px",
-    "padding-right" => $overlay_padding["right"] ?? "0px",
-    "padding-bottom" => $overlay_padding["bottom"] ?? "0px",
-    "padding-left" => $overlay_padding["left"] ?? "0px",
-    "background-color" => $bg_color ?: null,
+$overlay_border = $attributes["overlayBorder"] ?? null;
+
+$overlay_props = array_merge(
+    [
+        "padding-top" => $overlay_padding["top"] ?? "0px",
+        "padding-right" => $overlay_padding["right"] ?? "0px",
+        "padding-bottom" => $overlay_padding["bottom"] ?? "0px",
+        "padding-left" => $overlay_padding["left"] ?? "0px",
+        "background-color" => $bg_color ?: null,
+        "gap" => $content_gap ?: null,
+    ],
+    cns_border_to_props($overlay_border),
+);
+
+// max-width belongs on the positioned wrapper (the flex child aligned by the
+// container's justify-content), not the inner overlay.
+$overlay_wrapper_props = [
+    "max-width" => $overlay_max_width ?: null,
 ];
 
 // ── Credit items ──────────────────────────────────────────────────────────────
@@ -69,7 +83,9 @@ $credit_items = $attributes["creditItems"] ?? [];
     <div class="hero__container" style="<?php echo cns_generate_style_text(
         $container_props,
     ); ?>">
-        <div class="wp-block-cns-theme-cns-hero-overlay">
+        <div class="wp-block-cns-theme-cns-hero-overlay" style="<?php echo cns_generate_style_text(
+            $overlay_wrapper_props,
+        ); ?>">
             <div class="hero__overlay" style="<?php echo cns_generate_style_text(
                 $overlay_props,
             ); ?>">

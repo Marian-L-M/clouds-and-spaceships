@@ -4,11 +4,11 @@ import { useState } from "@wordpress/element";
 import { decodeEntities } from "@wordpress/html-entities";
 import {
   BlockControls,
-  InnerBlocks,
   InspectorControls,
   MediaUpload,
   MediaUploadCheck,
   useBlockProps,
+  useInnerBlocksProps,
 } from "@wordpress/block-editor";
 import {
   Modal,
@@ -22,8 +22,15 @@ import {
 import {
   ColorPicker,
   BoxControl,
+  BorderBoxControl,
   SelectControl,
+  UnitControl,
   URLInput,
+} from "../../types/wp-components";
+import type {
+  BorderBoxValue,
+  BorderValue,
+  SplitBorderValue,
 } from "../../types/wp-components";
 import type { BlockEditProps } from "@wordpress/blocks";
 import type { CSSProperties } from "react";
@@ -60,11 +67,54 @@ export type HeroAttributes = {
   bgImageID?: number;
   bgImageURL: string;
   bgColor: string;
+  overlayMaxWidth: string;
+  contentGap: string;
+  overlayBorder?: BorderBoxValue;
   contentPosition: string;
   slidePadding: BoxSides;
   overlayPadding: BoxSides;
   creditItems: HeroCreditItem[];
 };
+
+const UNIT_OPTIONS = [
+  { value: "px", label: "px", default: 0 },
+  { value: "%", label: "%", default: 0 },
+  { value: "vw", label: "vw", default: 0 },
+  { value: "em", label: "em", default: 0 },
+  { value: "rem", label: "rem", default: 0 },
+];
+
+const BORDER_SIDES = ["top", "right", "bottom", "left"] as const;
+
+/** Width/style/color declarations for one border side (or all sides). */
+function singleBorderCss(
+  prefix: string,
+  border?: BorderValue,
+): Record<string, string> {
+  const css: Record<string, string> = {};
+  if (!border) return css;
+  if (border.width) css[`${prefix}Width`] = border.width;
+  // A width with no explicit style still needs one to render.
+  if (border.style || border.width) css[`${prefix}Style`] = border.style || "solid";
+  if (border.color) css[`${prefix}Color`] = border.color;
+  return css;
+}
+
+/** Convert a BorderBoxControl value (flat or per-side) into inline CSS. */
+function borderToCss(border?: BorderBoxValue): CSSProperties {
+  if (!border) return {};
+  const isSplit = BORDER_SIDES.some((side) => side in border);
+  if (!isSplit) {
+    return singleBorderCss("border", border as BorderValue) as CSSProperties;
+  }
+  const split = border as SplitBorderValue;
+  return {
+    ...singleBorderCss("borderTop", split.top),
+    ...singleBorderCss("borderRight", split.right),
+    ...singleBorderCss("borderBottom", split.bottom),
+    ...singleBorderCss("borderLeft", split.left),
+  } as CSSProperties;
+}
 
 const POSITIONS = [
   "top-left",
@@ -217,11 +267,27 @@ export default function Edit({
     bgImageID,
     bgImageURL,
     bgColor,
+    overlayMaxWidth,
+    contentGap,
+    overlayBorder,
     contentPosition,
     slidePadding,
     overlayPadding,
     creditItems,
   } = attributes;
+
+  // Theme palette for the border colour picker (stable across WP versions).
+  const themeColors = useSelect(
+    (select) =>
+      (
+        select("core/block-editor") as unknown as {
+          getSettings: () => {
+            colors?: Array<{ name: string; color: string; slug?: string }>;
+          };
+        }
+      ).getSettings().colors ?? [],
+    [],
+  );
 
   const blockProps = useBlockProps();
 
@@ -244,7 +310,25 @@ export default function Edit({
     paddingBottom: overlayPadding?.bottom ?? "0px",
     paddingLeft: overlayPadding?.left ?? "0px",
     backgroundColor: bgColor ?? "",
+    gap: contentGap || "0px",
+    ...borderToCss(overlayBorder),
   };
+
+  // max-width goes on the positioned wrapper (the flex child that the
+  // container's justify-content aligns), not the inner overlay — otherwise the
+  // wrapper stays full-width and content positioning has nothing to act on.
+  const overlayWrapperStyle: CSSProperties = {
+    maxWidth: overlayMaxWidth || undefined,
+  };
+
+  // Merge the inner block list onto the overlay div so the blocks are its
+  // direct children — mirrors the front-end markup (render.php echoes $content
+  // straight into .hero__overlay) so the flex `gap` spaces blocks in the
+  // editor too, instead of only wrapping InnerBlocks' layout container.
+  const overlayInnerBlocksProps = useInnerBlocksProps(
+    { className: "hero__overlay", style: overlayStyle },
+    {},
+  );
 
   // Credit Items setup
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -472,6 +556,39 @@ export default function Edit({
           />
         </PanelBody>
 
+        <PanelBody title="Content Layout">
+          <UnitControl
+            label="Overlay Max Width"
+            value={overlayMaxWidth}
+            units={UNIT_OPTIONS}
+            min={0}
+            placeholder="Full width"
+            onChange={(value) =>
+              setAttributes({ overlayMaxWidth: value ?? "" })
+            }
+            __next40pxDefaultSize
+          />
+          <UnitControl
+            label="Content Gap"
+            value={contentGap}
+            units={UNIT_OPTIONS}
+            min={0}
+            onChange={(value) => setAttributes({ contentGap: value ?? "" })}
+            __next40pxDefaultSize
+          />
+          <div style={{ marginTop: "16px" }}>
+            <BorderBoxControl
+              label="Overlay Border"
+              value={overlayBorder}
+              colors={themeColors}
+              enableAlpha
+              enableStyle
+              onChange={(value) => setAttributes({ overlayBorder: value })}
+              __next40pxDefaultSize
+            />
+          </div>
+        </PanelBody>
+
         <PanelBody title="Container Padding">
           <BoxControl
             label="Padding"
@@ -629,10 +746,8 @@ export default function Edit({
 
       <div {...blockProps}>
         <div className="hero__container" style={containerStyle}>
-          <div className="hero__editor-overlay">
-            <div className="hero__overlay" style={overlayStyle}>
-              <InnerBlocks />
-            </div>
+          <div className="hero__editor-overlay" style={overlayWrapperStyle}>
+            <div {...overlayInnerBlocksProps} />
             {topLevelItems.map(renderCreditItem)}
           </div>
         </div>

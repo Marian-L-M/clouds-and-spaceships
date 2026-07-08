@@ -18,6 +18,9 @@
     "bgImageID": { "type": "number" },
     "bgImageURL": { "type": "string", "default": "" },
     "bgColor": { "type": "string", "default": "" },
+    "overlayMaxWidth": { "type": "string", "default": "" },
+    "contentGap": { "type": "string", "default": "0px" },
+    "overlayBorder": { "type": "object" },
     "contentPosition": { "type": "string", "default": "middle-center" },
     "slidePadding": {
       "type": "object",

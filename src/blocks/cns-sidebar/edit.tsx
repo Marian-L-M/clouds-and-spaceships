@@ -425,10 +425,10 @@ export default function Edit({
       <BlockControls>
         <ToolbarGroup>
           <ToolbarButton
-            label={__("Add link", "cns-theme")}
+            label={__("Add row", "cns-theme")}
             onClick={openAddModal}
           >
-            {__("Add link", "cns-theme")}
+            {__("Add row", "cns-theme")}
           </ToolbarButton>
         </ToolbarGroup>
       </BlockControls>
@@ -438,8 +438,8 @@ export default function Edit({
         <Modal
           title={
             editingIndex !== null
-              ? __("Edit Link", "cns-theme")
-              : __("Add Link", "cns-theme")
+              ? __("Edit row", "cns-theme")
+              : __("Add row", "cns-theme")
           }
           onRequestClose={closeModal}
           className="cns-elements__modal cns-sidebar__modal"
@@ -637,7 +637,7 @@ export default function Edit({
           <ul className="cns-sidebar__links">
             {topLevelItems.length === 0 && (
               <li className="cns-sidebar__empty">
-                {__("Add links in the toolbar.", "cns-theme")}
+                {__("Add rows in the toolbar.", "cns-theme")}
               </li>
             )}
             {topLevelItems.map(renderNavItem)}

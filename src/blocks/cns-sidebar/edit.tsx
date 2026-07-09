@@ -1,6 +1,5 @@
 import { __ } from "@wordpress/i18n";
 import { useState } from "@wordpress/element";
-import { useSelect } from "@wordpress/data";
 import { decodeEntities } from "@wordpress/html-entities";
 import {
   useBlockProps,
@@ -24,11 +23,12 @@ import {
 } from "../../types/wp-components";
 import type { BlockEditProps } from "@wordpress/blocks";
 import type { CSSProperties, ReactElement } from "react";
-import type {
-  CoreStoreSelectors,
-  SelectOption,
-  WPPostRecord,
-} from "../../types/wordpress";
+import type { SelectOption, WPPostRecord } from "../../types/wordpress";
+import { PostQuickSelect } from "../../shared/components/PostQuickSelect";
+import {
+  usePostTypeOptions,
+  usePublishedPosts,
+} from "../../shared/hooks/usePostPicker";
 import "./editor.scss";
 
 type SidebarItemType = "link" | "group";
@@ -65,17 +65,6 @@ export type SidebarAttributes = {
     };
   };
 };
-
-const SYSTEM_POST_TYPES = [
-  "attachment",
-  "wp_template",
-  "wp_template_part",
-  "wp_navigation",
-  "wp_global_styles",
-  "wp_block",
-  "wp_font_family",
-  "wp_font_face",
-];
 
 // Max-width slider bounds (px). Mirrors the cns-hero height control.
 const WIDTH_MIN = 240;
@@ -166,28 +155,8 @@ export default function Edit({
 
   // ── Data fetching ──────────────────────────────────────────────────────────
 
-  const postTypeOptions = useSelect((select) => {
-    const core = select("core") as unknown as CoreStoreSelectors;
-    const types = core.getPostTypes({ per_page: -1 });
-    if (!types) return [{ label: "Pages", value: "page" }];
-    return types
-      .filter((pt) => pt.viewable && !SYSTEM_POST_TYPES.includes(pt.slug))
-      .map((pt) => ({ label: pt.labels?.name || pt.slug, value: pt.slug }));
-  }, []);
-
-  const quickSelectPosts = useSelect(
-    (select) =>
-      (select("core") as unknown as CoreStoreSelectors).getEntityRecords(
-        "postType",
-        quickSelectType,
-        {
-          per_page: 20,
-          status: "publish",
-          _fields: "id,title,link,slug",
-        },
-      ),
-    [quickSelectType],
-  );
+  const postTypeOptions = usePostTypeOptions();
+  const quickSelectPosts = usePublishedPosts(quickSelectType);
 
   // ── Modal handlers ──────────────────────────────────────────────────────────
 
@@ -485,41 +454,14 @@ export default function Edit({
                   />
                 </div>
 
-                <div className="cns-sidebar__quick-select">
-                  <div className="cns-elements__input-group">
-                    <SelectControl
-                      label={__("Quickselect from", "cns-theme")}
-                      value={quickSelectType}
-                      options={
-                        postTypeOptions ?? [{ label: "Pages", value: "page" }]
-                      }
-                      onChange={setQuickSelectType}
-                      __next40pxDefaultSize
-                    />
-                  </div>
-                  <div className="cns-elements__modal-actions cns-sidebar__quick-select-list">
-                    {quickSelectPosts === null && (
-                      <p className="cns-sidebar__quick-select-status">
-                        {__("Loading…", "cns-theme")}
-                      </p>
-                    )}
-                    {quickSelectPosts?.length === 0 && (
-                      <p className="cns-sidebar__quick-select-status">
-                        {__("No published items found.", "cns-theme")}
-                      </p>
-                    )}
-                    {quickSelectPosts?.map((post) => (
-                      <button
-                        key={post.id}
-                        type="button"
-                        className="cns-sidebar__quick-select-item"
-                        onClick={() => applyQuickSelect(post)}
-                      >
-                        {decodeEntities(post.title?.rendered || post.slug)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <PostQuickSelect
+                  label={__("Quickselect from", "cns-theme")}
+                  postType={quickSelectType}
+                  postTypeOptions={postTypeOptions}
+                  onPostTypeChange={setQuickSelectType}
+                  posts={quickSelectPosts}
+                  onPick={applyQuickSelect}
+                />
 
                 <SelectControl
                   label={__("Parent", "cns-theme")}

@@ -5,11 +5,10 @@ import { decodeEntities } from "@wordpress/html-entities";
 import {
   BlockControls,
   InspectorControls,
-  MediaUpload,
-  MediaUploadCheck,
   useBlockProps,
   useInnerBlocksProps,
 } from "@wordpress/block-editor";
+import type { BlockEditProps } from "@wordpress/blocks";
 import {
   Modal,
   PanelBody,
@@ -19,6 +18,9 @@ import {
   ToolbarGroup,
   ToolbarButton,
 } from "@wordpress/components";
+
+// Types
+import type { CSSProperties } from "react";
 import {
   ColorPicker,
   BoxControl,
@@ -32,14 +34,22 @@ import type {
   BorderValue,
   SplitBorderValue,
 } from "../../types/wp-components";
-import type { BlockEditProps } from "@wordpress/blocks";
-import type { CSSProperties } from "react";
-import type {
-  BoxSides,
-  CoreStoreSelectors,
-  WPMedia,
-  WPPostRecord,
-} from "../../types/wordpress";
+import type { BoxSides, WPPostRecord } from "../../types/wordpress";
+
+// Shared
+import { MediaPicker } from "../../shared/components/MediaPicker";
+import { PositionPicker } from "../../shared/components/PositionPicker";
+import { PostQuickSelect } from "../../shared/components/PostQuickSelect";
+import {
+  usePostTypeOptions,
+  usePublishedPosts,
+} from "../../shared/hooks/usePostPicker";
+import { DEFAULT_OFFSET, UNIT_OPTIONS } from "../../shared/lib/constants";
+import {
+  getFlexValues,
+  getPositionStyle,
+  getRelevantSides,
+} from "../../shared/lib/positions";
 
 /** A photo-credit overlay item stored in block attributes. */
 export interface HeroCreditItem {
@@ -76,14 +86,6 @@ export type HeroAttributes = {
   creditItems: HeroCreditItem[];
 };
 
-const UNIT_OPTIONS = [
-  { value: "px", label: "px", default: 0 },
-  { value: "%", label: "%", default: 0 },
-  { value: "vw", label: "vw", default: 0 },
-  { value: "em", label: "em", default: 0 },
-  { value: "rem", label: "rem", default: 0 },
-];
-
 const BORDER_SIDES = ["top", "right", "bottom", "left"] as const;
 
 /** Width/style/color declarations for one border side (or all sides). */
@@ -95,7 +97,8 @@ function singleBorderCss(
   if (!border) return css;
   if (border.width) css[`${prefix}Width`] = border.width;
   // A width with no explicit style still needs one to render.
-  if (border.style || border.width) css[`${prefix}Style`] = border.style || "solid";
+  if (border.style || border.width)
+    css[`${prefix}Style`] = border.style || "solid";
   if (border.color) css[`${prefix}Color`] = border.color;
   return css;
 }
@@ -116,23 +119,6 @@ function borderToCss(border?: BorderBoxValue): CSSProperties {
   } as CSSProperties;
 }
 
-const POSITIONS = [
-  "top-left",
-  "top-center",
-  "top-right",
-  "middle-left",
-  "middle-center",
-  "middle-right",
-  "bottom-left",
-  "bottom-center",
-  "bottom-right",
-];
-const DEFAULT_OFFSET: BoxSides = {
-  top: "1rem",
-  right: "1rem",
-  bottom: "1rem",
-  left: "1rem",
-};
 const DRAFT_DEFAULTS: HeroDraft = {
   id: "",
   type: "post",
@@ -143,119 +129,6 @@ const DRAFT_DEFAULTS: HeroDraft = {
   color: "#ffffff",
   icon: "marker",
 };
-
-const SYSTEM_POST_TYPES = [
-  "attachment",
-  "wp_template",
-  "wp_template_part",
-  "wp_navigation",
-  "wp_global_styles",
-  "wp_block",
-  "wp_font_family",
-  "wp_font_face",
-];
-
-function getFlexValues(position: string): {
-  alignItems: CSSProperties["alignItems"];
-  justifyContent: CSSProperties["justifyContent"];
-} {
-  const [v, h] = position.split("-");
-  return {
-    alignItems:
-      v === "top" ? "flex-start" : v === "bottom" ? "flex-end" : "center",
-    justifyContent:
-      h === "left" ? "flex-start" : h === "right" ? "flex-end" : "center",
-  };
-}
-
-function getRelevantSides(
-  position: string,
-): Array<"top" | "right" | "bottom" | "left"> {
-  const [v, h] = position.split("-");
-  const sides: Array<"top" | "right" | "bottom" | "left"> = [];
-  if (v === "top") sides.push("top");
-  else if (v === "bottom") sides.push("bottom");
-  if (h === "left") sides.push("left");
-  else if (h === "right") sides.push("right");
-  return sides;
-}
-
-function getPositionStyle(
-  position: string,
-  offset: BoxSides = {},
-): CSSProperties {
-  const [v, h] = position.split("-");
-  const style: CSSProperties = { position: "absolute" };
-  if (v === "top") style.top = offset.top ?? "1rem";
-  else if (v === "bottom") style.bottom = offset.bottom ?? "1rem";
-  else {
-    style.top = "50%";
-    style.transform = "translateY(-50%)";
-  }
-  if (h === "left") style.left = offset.left ?? "1rem";
-  else if (h === "right") style.right = offset.right ?? "1rem";
-  else {
-    style.left = "50%";
-    style.transform = style.transform
-      ? "translate(-50%, -50%)"
-      : "translateX(-50%)";
-  }
-  return style;
-}
-
-interface PositionPickerProps {
-  value: string;
-  onChange: (position: string) => void;
-}
-
-function PositionPicker({ value, onChange }: PositionPickerProps) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "4px",
-        maxWidth: "120px",
-        margin: "8px auto",
-      }}
-    >
-      {POSITIONS.map((pos) => {
-        const { alignItems: ai, justifyContent: jc } = getFlexValues(pos);
-        const isActive = value === pos;
-        return (
-          <button
-            key={pos}
-            type="button"
-            onClick={() => onChange(pos)}
-            title={pos}
-            style={{
-              height: "36px",
-              border: isActive ? "2px solid #007cba" : "1px solid #ddd",
-              borderRadius: "2px",
-              background: isActive ? "#007cba22" : "#f0f0f0",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: ai,
-              justifyContent: jc,
-              padding: "4px",
-            }}
-          >
-            <span
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                background: isActive ? "#007cba" : "#bbb",
-                display: "block",
-                flexShrink: 0,
-              }}
-            />
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 export default function Edit({
   attributes,
@@ -345,28 +218,8 @@ export default function Edit({
   const topLevelItems = sortedItems.filter((i) => !i.parentId);
 
   // ── Data fetching ──────────────────────────────────────────────────────────
-  const postTypeOptions = useSelect((select) => {
-    const core = select("core") as unknown as CoreStoreSelectors;
-    const types = core.getPostTypes({ per_page: -1 });
-    if (!types) return [{ label: "Pages", value: "page" }];
-    return types
-      .filter((pt) => pt.viewable && !SYSTEM_POST_TYPES.includes(pt.slug))
-      .map((pt) => ({ label: pt.labels?.name || pt.slug, value: pt.slug }));
-  }, []);
-
-  const quickSelectPosts = useSelect(
-    (select) =>
-      (select("core") as unknown as CoreStoreSelectors).getEntityRecords(
-        "postType",
-        quickSelectType,
-        {
-          per_page: 20,
-          status: "publish",
-          _fields: "id,title,link,slug",
-        },
-      ),
-    [quickSelectType],
-  );
+  const postTypeOptions = usePostTypeOptions();
+  const quickSelectPosts = usePublishedPosts(quickSelectType);
 
   // ── Modal handlers ──────────────────────────────────────────────────────────
   function openAddModal() {
@@ -456,65 +309,19 @@ export default function Edit({
     <>
       <InspectorControls>
         <PanelBody title="Background">
-          <MediaUploadCheck>
-            <MediaUpload
-              onSelect={(media: WPMedia) =>
-                setAttributes({ bgImageID: media.id, bgImageURL: media.url ?? "" })
-              }
-              allowedTypes={["image"]}
-              value={bgImageID}
-              render={({ open }) => (
-                <div style={{ marginTop: "8px" }}>
-                  {bgImageURL ? (
-                    <img
-                      src={bgImageURL}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        display: "block",
-                        borderRadius: "2px",
-                        marginBottom: "8px",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        border: "1px dashed #999",
-                        borderRadius: "2px",
-                        padding: "16px",
-                        textAlign: "center",
-                        marginBottom: "8px",
-                        color: "#999",
-                        fontSize: "12px",
-                      }}
-                    >
-                      No image selected
-                    </div>
-                  )}
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    <Button onClick={open} variant="secondary" size="small">
-                      {bgImageURL ? "Replace" : "Upload Image"}
-                    </Button>
-                    {bgImageURL && (
-                      <Button
-                        onClick={() =>
-                          setAttributes({
-                            bgImageID: undefined,
-                            bgImageURL: "",
-                          })
-                        }
-                        variant="link"
-                        isDestructive
-                        size="small"
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
-            />
-          </MediaUploadCheck>
+          <MediaPicker
+            value={bgImageID}
+            url={bgImageURL}
+            onSelect={(media) =>
+              setAttributes({
+                bgImageID: media.id,
+                bgImageURL: media.url ?? "",
+              })
+            }
+            onRemove={() =>
+              setAttributes({ bgImageID: undefined, bgImageURL: "" })
+            }
+          />
         </PanelBody>
         <PanelBody title="Display mode">
           <SelectControl
@@ -664,39 +471,14 @@ export default function Edit({
             />
           </div>
 
-          <div className="cns-hero__quick-select">
-            <p className="cns-hero__quick-select-heading">
-              {__("Or pick from:", "cns-theme")}
-            </p>
-            <SelectControl
-              value={quickSelectType}
-              options={postTypeOptions ?? [{ label: "Pages", value: "page" }]}
-              onChange={setQuickSelectType}
-              __next40pxDefaultSize
-            />
-            <div className="cns-sidebar__quick-select-list">
-              {quickSelectPosts === null && (
-                <p className="cns-sidebar__quick-select-status">
-                  {__("Loading…", "cns-theme")}
-                </p>
-              )}
-              {quickSelectPosts?.length === 0 && (
-                <p className="cns-sidebar__quick-select-status">
-                  {__("No published items found.", "cns-theme")}
-                </p>
-              )}
-              {quickSelectPosts?.map((post) => (
-                <button
-                  key={post.id}
-                  type="button"
-                  className="cns-sidebar__quick-select-item"
-                  onClick={() => applyQuickSelect(post)}
-                >
-                  {decodeEntities(post.title?.rendered || post.slug)}
-                </button>
-              ))}
-            </div>
-          </div>
+          <PostQuickSelect
+            heading={__("Or pick from:", "cns-theme")}
+            postType={quickSelectType}
+            postTypeOptions={postTypeOptions}
+            onPostTypeChange={setQuickSelectType}
+            posts={quickSelectPosts}
+            onPick={applyQuickSelect}
+          />
 
           {/* Position */}
           <p style={{ margin: "16px 0 4px", fontWeight: 500 }}>

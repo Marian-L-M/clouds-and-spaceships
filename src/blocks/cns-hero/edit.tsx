@@ -187,17 +187,10 @@ export default function Edit({
     ...borderToCss(overlayBorder),
   };
 
-  // max-width goes on the positioned wrapper (the flex child that the
-  // container's justify-content aligns), not the inner overlay — otherwise the
-  // wrapper stays full-width and content positioning has nothing to act on.
   const overlayWrapperStyle: CSSProperties = {
     maxWidth: overlayMaxWidth || undefined,
   };
 
-  // Merge the inner block list onto the overlay div so the blocks are its
-  // direct children — mirrors the front-end markup (render.php echoes $content
-  // straight into .hero__overlay) so the flex `gap` spaces blocks in the
-  // editor too, instead of only wrapping InnerBlocks' layout container.
   const overlayInnerBlocksProps = useInnerBlocksProps(
     { className: "hero__overlay", style: overlayStyle },
     {},
@@ -307,6 +300,7 @@ export default function Edit({
 
   return (
     <>
+      {/* Modals */}
       <InspectorControls>
         <PanelBody title="Background">
           <MediaPicker
@@ -328,11 +322,12 @@ export default function Edit({
             label="Mode"
             value={mode}
             options={[
-              { label: "Unconstrained", value: "unconstrained" },
-              { label: "Constrained", value: "constrained" },
+              { label: "Fullscreen Unconstrained", value: "unconstrained" },
+              { label: "Fullscreen Constrained", value: "constrained" },
               { label: "Fixed Height", value: "fixed" },
             ]}
             onChange={(value) => setAttributes({ mode: value })}
+            __next40pxDefaultSize
           />
           {(mode === "constrained" || mode === "fixed") && (
             <RangeControl
@@ -344,6 +339,7 @@ export default function Edit({
               max={2560}
               step={10}
               onChange={(value) => setAttributes({ bannerHeight: value })}
+              __next40pxDefaultSize
             />
           )}
         </PanelBody>
@@ -383,17 +379,16 @@ export default function Edit({
             onChange={(value) => setAttributes({ contentGap: value ?? "" })}
             __next40pxDefaultSize
           />
-          <div style={{ marginTop: "16px" }}>
-            <BorderBoxControl
-              label="Overlay Border"
-              value={overlayBorder}
-              colors={themeColors}
-              enableAlpha
-              enableStyle
-              onChange={(value) => setAttributes({ overlayBorder: value })}
-              __next40pxDefaultSize
-            />
-          </div>
+
+          <BorderBoxControl
+            label="Overlay Border"
+            value={overlayBorder}
+            colors={themeColors}
+            enableAlpha
+            enableStyle
+            onChange={(value) => setAttributes({ overlayBorder: value })}
+            __next40pxDefaultSize
+          />
         </PanelBody>
 
         <PanelBody title="Container Padding">
@@ -526,6 +521,7 @@ export default function Edit({
         </Modal>
       )}
 
+      {/* Editor */}
       <div {...blockProps}>
         <div className="hero__container" style={containerStyle}>
           <div className="hero__editor-overlay" style={overlayWrapperStyle}>

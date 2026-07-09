@@ -71,6 +71,7 @@ export default function Edit({
             onChange={(value) =>
               setAttributes({ slideType: value as SlideType })
             }
+            __next40pxDefaultSize
           />
 
           {slideType === "image" && (

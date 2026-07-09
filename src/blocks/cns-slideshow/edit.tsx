@@ -73,6 +73,7 @@ export default function Edit({
             onChange={(value) =>
               setAttributes({ slideshowType: value as SlideshowType })
             }
+            __next40pxDefaultSize
           />
           {slideshowType === "banner" && (
             <RangeControl
@@ -82,6 +83,7 @@ export default function Edit({
               max={1200}
               step={10}
               onChange={(value) => setAttributes({ bannerHeight: value ?? 0 })}
+              __next40pxDefaultSize
             />
           )}
           {slideshowType === "fixed" && (
@@ -93,6 +95,7 @@ export default function Edit({
                 max={1200}
                 step={10}
                 onChange={(value) => setAttributes({ fixedHeight: value ?? 0 })}
+                __next40pxDefaultSize
               />
               <RangeControl
                 label="Max Width (px)"
@@ -103,6 +106,7 @@ export default function Edit({
                 onChange={(value) =>
                   setAttributes({ fixedMaxWidth: value ?? 0 })
                 }
+                __next40pxDefaultSize
               />
             </>
           )}

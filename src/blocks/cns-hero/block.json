@@ -4,7 +4,7 @@
   "name": "cns-theme/cns-hero",
   "version": "1.0.0",
   "title": "CNS Hero",
-  "description": "A hero slide with background image, colour overlay, and configurable content position.",
+  "description": "A hero section with background image, colour overlay, and configurable content position.",
   "category": "media",
   "icon": "cover-image",
   "textdomain": "cns-theme",
@@ -58,20 +58,20 @@
       "items": {
         "type": "object",
         "properties": {
-          "id":       { "type": ["string", "null"] },
-          "type":     { "type": "string" },
-          "url":      { "type": ["string", "null"] },
-          "text":     { "type": "string" },
+          "id": { "type": ["string", "null"] },
+          "type": { "type": "string" },
+          "url": { "type": ["string", "null"] },
+          "text": { "type": "string" },
           "position": { "type": "string" },
-          "color":    { "type": "string" },
-          "icon":     { "type": "string" },
+          "color": { "type": "string" },
+          "icon": { "type": "string" },
           "offset": {
             "type": "object",
             "properties": {
-              "top":    { "type": "string" },
-              "right":  { "type": "string" },
+              "top": { "type": "string" },
+              "right": { "type": "string" },
               "bottom": { "type": "string" },
-              "left":   { "type": "string" }
+              "left": { "type": "string" }
             }
           }
         }

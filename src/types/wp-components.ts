@@ -42,10 +42,6 @@ export const BoxControl = (
   WPComponents as unknown as { BoxControl: ComponentType<BoxControlProps> }
 ).BoxControl;
 
-// `BorderBoxControl` — exported at runtime as `__experimentalBorderBoxControl`;
-// not present in DT. Handles all-sides ("linked") and per-side ("unlinked")
-// borders, each with color/style/width. The value is a flat `BorderValue` when
-// linked, or a `SplitBorderValue` (top/right/bottom/left) when unlinked.
 export interface BorderValue {
   color?: string;
   style?: string;
@@ -73,9 +69,9 @@ export interface BorderBoxControlProps {
 
 export const BorderBoxControl = (
   WPComponents as unknown as {
-    __experimentalBorderBoxControl: ComponentType<BorderBoxControlProps>;
+    BorderBoxControl: ComponentType<BorderBoxControlProps>;
   }
-).__experimentalBorderBoxControl;
+).BorderBoxControl;
 
 export interface UnitControlProps {
   label?: string;
@@ -143,5 +139,4 @@ export interface URLInputProps {
   __next40pxDefaultSize?: boolean;
 }
 
-export const URLInput =
-  RawURLInput as unknown as ComponentType<URLInputProps>;
+export const URLInput = RawURLInput as unknown as ComponentType<URLInputProps>;

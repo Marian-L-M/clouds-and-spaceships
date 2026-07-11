@@ -1,4 +1,5 @@
 <?php
+
 // ── Content position ──────────────────────────────────────────────────────────
 $content_position = $attributes["contentPosition"] ?? "middle-center";
 [$v, $h] = explode("-", $content_position);
@@ -98,10 +99,11 @@ $credit_items = $attributes["creditItems"] ?? [];
                     $item["offset"] ?? [],
                 ); ?>
             <a
-                class="hero__credits"
+                class="cns-hero__credit-item"
                 href="<?php echo esc_url($item["url"] ?? ""); ?>"
                 style="<?php echo cns_generate_style_text($item_props); ?>"
             >
+            <?php esc_html(cns_render_icon($item["icon"])); ?>
                 <span style="color:<?php echo esc_attr(
                     $item["color"] ?? "#ffffff",
                 ); ?>">

@@ -42,6 +42,7 @@
     "@glidejs/glide": "^3.7.1",
     "@wordpress/icons": "^11.6.0",
     "@wordpress/scripts": "^31.1.0",
-    "axios": "^1.13.2"
+    "axios": "^1.13.2",
+    "lucide-react": "^1.24.0"
   }
 }

@@ -59,7 +59,6 @@
         "type": "object",
         "properties": {
           "id": { "type": ["string", "null"] },
-          "type": { "type": "string" },
           "url": { "type": ["string", "null"] },
           "text": { "type": "string" },
           "position": { "type": "string" },

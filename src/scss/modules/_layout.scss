@@ -50,6 +50,33 @@
       margin-bottom: 2rem;
     }
   }
+  // Wraps the editable post content (center + infobox) so the sidebar can live
+  // in the block template rather than in the post itself.
+  &__center-area {
+    order: 2;
+    padding: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    // core/post-content emits an .entry-content / .wp-block-post-content wrapper
+    // on the front end; let it fill the column so the inner columns can lay out.
+    > .entry-content,
+    > .wp-block-post-content {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      margin: 0;
+    }
+  }
+  &__inner-wrapper {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 0;
+    gap: 0;
+    margin: 0;
+  }
   &__narrow {
     max-width: 24rem;
   }
@@ -76,6 +103,13 @@
     &__wrapper {
       min-height: unset;
       height: calc(100vh - var(--wp--custom--header--height, 5rem));
+      gap: 4rem 1rem;
+    }
+    // Inner columns (center + infobox) form their own full-height row so each
+    // column keeps its independent scroll, mirroring the old flat layout.
+    &__inner-wrapper {
+      flex-wrap: nowrap;
+      height: 100%;
       gap: 4rem 1rem;
     }
     &__side {

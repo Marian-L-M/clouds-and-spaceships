@@ -5,10 +5,12 @@
   // Buttons
   &__btn {
     position: relative;
+    display: flex;
+    align-items: center;
     svg {
       display: none;
       position: absolute;
-      right: -1.2em;
+      right: 0em;
     }
     &:hover {
       padding-right: 1.6em;
@@ -42,6 +44,11 @@
     flex-wrap: wrap;
     gap: 1rem 0.25rem;
     margin-top: 0.5rem;
+  }
+
+  &__icon-stroke {
+    fill: none !important;
+    stroke: currentColor !important;
   }
   @media screen and (min-width: 768px) {
     &__modal {

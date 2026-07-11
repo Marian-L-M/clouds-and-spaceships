@@ -1,6 +1,7 @@
 <?php
 // Setup theme
 
+require get_theme_file_path("/functions/design-functions.php");
 require get_theme_file_path("/functions/theme-utilities.php");
 require get_theme_file_path("/functions/page-presets.php");
 require get_theme_file_path("/functions/theme-admin/cns-admin.php");
@@ -40,13 +41,13 @@ function cns_register_toast(): void
         get_template_directory_uri() . "/build/toast.js",
         $toast_asset["dependencies"],
         $toast_asset["version"],
-        true
+        true,
     );
     wp_register_style(
         "cns-toast",
         get_template_directory_uri() . "/build/toast.css",
         [],
-        $toast_asset["version"]
+        $toast_asset["version"],
     );
 }
 add_action("init", "cns_register_toast");
@@ -72,27 +73,27 @@ function cns_enqueue_frontend_assets(): void
         "page_setup",
         get_template_directory_uri() . "/assets/css/setup.css",
         [],
-        $version
+        $version,
     );
     // Structural css for template
     wp_enqueue_style(
         "main_styles",
         get_template_directory_uri() . "/assets/css/main.css",
         [],
-        $version
+        $version,
     );
     // Utility css classes
     wp_enqueue_style(
         "utilities",
         get_template_directory_uri() . "/assets/css/utilities.css",
         [],
-        $version
+        $version,
     );
     wp_enqueue_style(
         "animation",
         get_template_directory_uri() . "/assets/css/animation.css",
         [],
-        $version
+        $version,
     );
 
     // Global theme styles + scripts (compiled from src/ by wp-scripts)
@@ -101,14 +102,14 @@ function cns_enqueue_frontend_assets(): void
         "global_styles",
         get_template_directory_uri() . "/build/index.css",
         [],
-        $index_asset["version"]
+        $index_asset["version"],
     );
     wp_enqueue_script(
         "cns-theme-modules",
         get_theme_file_uri("/build/index.js"),
         $index_asset["dependencies"],
         $index_asset["version"],
-        true
+        true,
     );
     wp_localize_script("cns-theme-modules", "cnsThemeData", [
         "root_url" => get_site_url(),
@@ -137,12 +138,12 @@ function cns_register_theme_blocks(): void
     if (file_exists(__DIR__ . "/build/blocks-manifest.php")) {
         wp_register_block_types_from_metadata_collection(
             __DIR__ . "/build/blocks",
-            __DIR__ . "/build/blocks-manifest.php"
+            __DIR__ . "/build/blocks-manifest.php",
         );
     } elseif (defined("WP_DEBUG") && WP_DEBUG) {
         trigger_error(
             "CNS theme: block manifest not found — run `npm run build` in the theme directory.",
-            E_USER_NOTICE
+            E_USER_NOTICE,
         );
     }
 }
@@ -159,7 +160,7 @@ function cns_editor_theme_data(): void
                 "theme_uri" => get_stylesheet_directory_uri(),
             ]) .
             ";",
-        "before"
+        "before",
     );
 }
 add_action("enqueue_block_editor_assets", "cns_editor_theme_data");
@@ -174,7 +175,7 @@ function cns_editor_ui_styles(): void
         "cns-editor-ui",
         get_template_directory_uri() . "/build/editor.css",
         [],
-        $asset["version"]
+        $asset["version"],
     );
 }
 add_action("enqueue_block_editor_assets", "cns_editor_ui_styles");

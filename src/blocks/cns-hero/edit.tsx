@@ -20,7 +20,7 @@ import {
 } from "@wordpress/components";
 
 // Types
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
   ColorPicker,
   BoxControl,
@@ -50,11 +50,10 @@ import {
   getPositionStyle,
   getRelevantSides,
 } from "../../shared/lib/positions";
+import { CnsRenderIcon } from "../../shared/functions/renderIcons";
 
-/** A photo-credit overlay item stored in block attributes. */
 export interface HeroCreditItem {
   id: string;
-  type: string;
   url: string;
   text: string;
   position: string;
@@ -65,7 +64,6 @@ export interface HeroCreditItem {
   parentId?: string | null;
 }
 
-/** The in-progress credit item being added or edited in the modal. */
 type HeroDraft = Omit<HeroCreditItem, "order" | "parentId"> & {
   order?: number;
 };
@@ -121,7 +119,6 @@ function borderToCss(border?: BorderBoxValue): CSSProperties {
 
 const DRAFT_DEFAULTS: HeroDraft = {
   id: "",
-  type: "post",
   url: "",
   text: "",
   position: "bottom-left",
@@ -176,6 +173,8 @@ export default function Edit({
     backgroundImage: `url(${bgImageURL})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
+    maxHeight:
+      mode === "constrained" || mode === "fixed" ? bannerHeight : "100vh",
   };
   const overlayStyle: CSSProperties = {
     paddingTop: overlayPadding?.top ?? "0px",
@@ -225,7 +224,6 @@ export default function Edit({
     const item = creditItems[index];
     setDraft({
       id: item.id || String(Date.now()),
-      type: item.type,
       url: item.url || "",
       text: item.text || "",
       position: item.position || "bottom-left",
@@ -244,7 +242,6 @@ export default function Edit({
   function saveItem() {
     const newItem: HeroCreditItem = {
       id: draft.id || String(Date.now()),
-      type: draft.type,
       url: draft.url || "",
       text: draft.text || "",
       position: draft.position || "bottom-left",
@@ -293,7 +290,13 @@ export default function Edit({
         style={getPositionStyle(item.position || "bottom-left", item.offset)}
         onClick={() => openEditModal(originalIndex)}
       >
-        <span style={{ color: item.color }}>{item.text}</span>
+        <div className="cns-hero__credit-item" style={{ color: item.color }}>
+          {CnsRenderIcon(item.icon)}
+          <span className="cns-elements__btn">
+            <span>{item.text}</span>
+            {CnsRenderIcon("edit")}
+          </span>
+        </div>
       </Button>
     );
   }
@@ -409,10 +412,10 @@ export default function Edit({
       <BlockControls>
         <ToolbarGroup>
           <ToolbarButton
-            label={__("Add Credit Items", "cns-theme")}
+            label={__("Add Credit Links", "cns-theme")}
             onClick={openAddModal}
           >
-            {__("Add Credit Item", "cns-theme")}
+            {__("Add Credit Link", "cns-theme")}
           </ToolbarButton>
         </ToolbarGroup>
       </BlockControls>
@@ -421,26 +424,28 @@ export default function Edit({
         <Modal
           title={
             editingIndex !== null
-              ? __("Edit Credit item", "cns-theme")
-              : __("Add Credit Item", "cns-theme")
+              ? __("Edit Credit Link", "cns-theme")
+              : __("Add Credit Link", "cns-theme")
           }
           onRequestClose={closeModal}
           className="cns-hero__credits-modal"
         >
           {/* Type selector */}
           <SelectControl
-            label={__("Type", "cns-theme")}
-            value={draft.type}
+            label={__("Icon", "cns-theme")}
+            value={draft.icon}
             options={[
-              { label: __("Post", "cns-theme"), value: "post" },
-              { label: __("Author", "cns-theme"), value: "author" },
+              { label: __("None", "cns-theme"), value: "" },
+              { label: __("Marker", "cns-theme"), value: "marker" },
+              { label: __("Book", "cns-theme"), value: "book" },
+              { label: __("Edit", "cns-theme"), value: "edit" },
+              { label: __("User", "cns-theme"), value: "User" },
               { label: __("External", "cns-theme"), value: "external" },
-              { label: __("No link", "cns-theme"), value: "no-link" },
             ]}
             onChange={(value) =>
               setDraft((prev) => ({
                 ...prev,
-                type: value,
+                icon: value,
               }))
             }
             __next40pxDefaultSize
@@ -500,7 +505,7 @@ export default function Edit({
             />
           )}
 
-          <div className="cns-sidebar__modal-actions">
+          <div className="cns-elements__modal-actions cns-hero__modal-actions">
             <Button variant="primary" onClick={saveItem}>
               {" "}
               {__("Save", "cns-theme")}

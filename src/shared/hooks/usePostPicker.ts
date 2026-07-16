@@ -23,10 +23,14 @@ export function usePostTypeOptions(): SelectOption[] {
 }
 
 /**
- * The 20 most recent published records of `postType` (id/title/link/slug only).
- * `null` while loading; `[]` when none are found.
+ * The 20 most recent published records of `postType` (id/title/link/slug
+ * only), optionally filtered by a search string. `null` while loading;
+ * `[]` when none are found.
  */
-export function usePublishedPosts(postType: string): WPPostRecord[] | null {
+export function usePublishedPosts(
+  postType: string,
+  search = "",
+): WPPostRecord[] | null {
   return useSelect(
     (select) =>
       (select("core") as unknown as CoreStoreSelectors).getEntityRecords(
@@ -35,9 +39,10 @@ export function usePublishedPosts(postType: string): WPPostRecord[] | null {
         {
           per_page: 20,
           status: "publish",
+          search,
           _fields: "id,title,link,slug",
         },
       ),
-    [postType],
+    [postType, search],
   );
 }

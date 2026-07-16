@@ -1,31 +1,26 @@
 import {
-  MapPin,
-  User,
-  SquareArrowOutUpRight,
-  SquarePen,
-  BookOpenText,
-} from "lucide-react";
+  Icon,
+  commentAuthorAvatar,
+  external,
+  mapMarker,
+  pages,
+  pencil,
+} from "@wordpress/icons";
+
+/**
+ * Icon set for credit links etc. — @wordpress/icons, mirrored on the frontend
+ * by cns_render_icon() in functions/design-functions.php. Keep both in sync.
+ */
+const ICONS: Record<string, JSX.Element> = {
+  marker: mapMarker,
+  book: pages,
+  user: commentAuthorAvatar,
+  external,
+  edit: pencil,
+};
 
 export function CnsRenderIcon(icon: string) {
-  switch (icon) {
-    case "marker":
-      return (
-        <MapPin className="cns-elements__icon cns-elements__icon-stroke" />
-      );
-    case "book":
-      return (
-        <BookOpenText className="cns-elements__icon cns-elements__icon-stroke" />
-      );
-    case "user":
-      return <User className="cns-elements__icon cns-elements__icon-stroke" />;
-    case "external":
-      return (
-        <SquareArrowOutUpRight className="cns-elements__icon cns-elements__icon-stroke" />
-      );
-    case "edit":
-      return (
-        <SquarePen className="cns-elements__icon cns-elements__icon-stroke" />
-      );
-  }
-  return null;
+  const match = ICONS[icon.toLowerCase()];
+  if (!match) return null;
+  return <Icon icon={match} className="cns-elements__icon" />;
 }

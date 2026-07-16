@@ -128,6 +128,43 @@ export interface SelectControlProps {
 export const SelectControl =
   WPComponents.SelectControl as unknown as ComponentType<SelectControlProps>;
 
+// `ComboboxControl` — DT's surface predates `onFilterValueChange`, `allowReset`
+// and the `__next*` opt-in flags.
+export interface ComboboxControlProps {
+  label?: string;
+  hideLabelFromVision?: boolean;
+  help?: ReactNode;
+  value?: string | null;
+  options: SelectOption[];
+  onChange?: (value: string | null | undefined) => void;
+  onFilterValueChange?: (value: string) => void;
+  placeholder?: string;
+  allowReset?: boolean;
+  __next40pxDefaultSize?: boolean;
+  __nextHasNoMarginBottom?: boolean;
+}
+
+export const ComboboxControl =
+  WPComponents.ComboboxControl as unknown as ComponentType<ComboboxControlProps>;
+
+// `AlignmentMatrixControl` — exported at runtime (stable on newer WP,
+// `__experimentalAlignmentMatrixControl` on older); not present in DT.
+export interface AlignmentMatrixControlProps {
+  label?: string;
+  /** e.g. "top left", "center center", "bottom right". */
+  value?: string;
+  onChange?: (value: string) => void;
+  width?: number;
+}
+
+const WPComponentsWithAMC = WPComponents as unknown as {
+  AlignmentMatrixControl?: ComponentType<AlignmentMatrixControlProps>;
+  __experimentalAlignmentMatrixControl?: ComponentType<AlignmentMatrixControlProps>;
+};
+
+export const AlignmentMatrixControl = (WPComponentsWithAMC.AlignmentMatrixControl ??
+  WPComponentsWithAMC.__experimentalAlignmentMatrixControl)!;
+
 // DT's `URLInput` Props omit `placeholder` (and the modern sizing flag), which
 // the runtime component accepts.
 export interface URLInputProps {

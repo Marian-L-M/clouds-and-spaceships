@@ -40,10 +40,7 @@ import type { BoxSides, WPPostRecord } from "../../types/wordpress";
 import { MediaPicker } from "../../shared/components/MediaPicker";
 import { PositionPicker } from "../../shared/components/PositionPicker";
 import { PostQuickSelect } from "../../shared/components/PostQuickSelect";
-import {
-  usePostTypeOptions,
-  usePublishedPosts,
-} from "../../shared/hooks/usePostPicker";
+import { usePostTypeOptions } from "../../shared/hooks/usePostPicker";
 import { DEFAULT_OFFSET, UNIT_OPTIONS } from "../../shared/lib/constants";
 import {
   getFlexValues,
@@ -211,7 +208,6 @@ export default function Edit({
 
   // ── Data fetching ──────────────────────────────────────────────────────────
   const postTypeOptions = usePostTypeOptions();
-  const quickSelectPosts = usePublishedPosts(quickSelectType);
 
   // ── Modal handlers ──────────────────────────────────────────────────────────
   function openAddModal() {
@@ -430,55 +426,64 @@ export default function Edit({
           onRequestClose={closeModal}
           className="cns-hero__credits-modal"
         >
-          {/* Type selector */}
-          <SelectControl
-            label={__("Icon", "cns-theme")}
-            value={draft.icon}
-            options={[
-              { label: __("None", "cns-theme"), value: "" },
-              { label: __("Marker", "cns-theme"), value: "marker" },
-              { label: __("Book", "cns-theme"), value: "book" },
-              { label: __("Edit", "cns-theme"), value: "edit" },
-              { label: __("User", "cns-theme"), value: "User" },
-              { label: __("External", "cns-theme"), value: "external" },
-            ]}
-            onChange={(value) =>
-              setDraft((prev) => ({
-                ...prev,
-                icon: value,
-              }))
-            }
-            __next40pxDefaultSize
-          />
+          <div className="cns-grid cns-grid__12">
+            {/* Type selector */}
+            <div className="cns-grid__group">
+              <SelectControl
+                label={__("Icon", "cns-theme")}
+                value={draft.icon}
+                options={[
+                  { label: __("None", "cns-theme"), value: "" },
+                  { label: __("Marker", "cns-theme"), value: "marker" },
+                  { label: __("Book", "cns-theme"), value: "book" },
+                  { label: __("Edit", "cns-theme"), value: "edit" },
+                  { label: __("User", "cns-theme"), value: "user" },
+                  { label: __("External", "cns-theme"), value: "external" },
+                ]}
+                onChange={(value) =>
+                  setDraft((prev) => ({
+                    ...prev,
+                    icon: value,
+                  }))
+                }
+                __next40pxDefaultSize
+              />
+            </div>
 
-          {/* Credit text */}
-          <TextControl
-            label={__("Text", "cns-theme")}
-            value={draft.text}
-            onChange={(value) => setDraft((prev) => ({ ...prev, text: value }))}
-            __next40pxDefaultSize
-          />
+            {/* Credit text */}
+            <div className="cns-grid__group">
+              <TextControl
+                label={__("Text", "cns-theme")}
+                value={draft.text}
+                onChange={(value) =>
+                  setDraft((prev) => ({ ...prev, text: value }))
+                }
+                __next40pxDefaultSize
+              />
+            </div>
 
-          {/* URL input */}
-          <div className="cns-hero__url-field">
-            <label className="components-base-control__label">
-              {__("URL", "cns-theme")}
-            </label>
-            <URLInput
-              value={draft.url}
-              onChange={(url) => setDraft((prev) => ({ ...prev, url }))}
-              placeholder={__("Paste URL or search…", "cns-theme")}
-            />
+            {/* URL input */}
+            <div className="cns-grid__group cns-grid__span-full cns-hero__url-field">
+              <label className="components-base-control__label">
+                {__("URL", "cns-theme")}
+              </label>
+              <URLInput
+                value={draft.url}
+                onChange={(url) => setDraft((prev) => ({ ...prev, url }))}
+                placeholder={__("Paste URL or search…", "cns-theme")}
+              />
+            </div>
+
+            <div className="cns-grid__group cns-grid__span-full">
+              <PostQuickSelect
+                heading={__("Or pick from:", "cns-theme")}
+                postType={quickSelectType}
+                postTypeOptions={postTypeOptions}
+                onPostTypeChange={setQuickSelectType}
+                onPick={applyQuickSelect}
+              />
+            </div>
           </div>
-
-          <PostQuickSelect
-            heading={__("Or pick from:", "cns-theme")}
-            postType={quickSelectType}
-            postTypeOptions={postTypeOptions}
-            onPostTypeChange={setQuickSelectType}
-            posts={quickSelectPosts}
-            onPick={applyQuickSelect}
-          />
 
           {/* Position */}
           <p style={{ margin: "16px 0 4px", fontWeight: 500 }}>

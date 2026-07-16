@@ -1,5 +1,54 @@
 @use "../shared/styles/picker";
 
+// ── Shared form grid (mirrors .cns-grid in the cns-map/story-suite admin) ────
+// __12 = 1 column → 2 at 1200px, __24 = 2 → 4; __span-full is safe in any
+// column count (unlike span-N, which can create implicit columns).
+.cns-grid {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+
+  &__12 {
+    grid-template-columns: 1fr;
+  }
+  &__24 {
+    grid-template-columns: 1fr 1fr;
+  }
+  &__row,
+  &__group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  &__row {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+  &__span-1 {
+    grid-column: span 1;
+  }
+  &__span-2 {
+    grid-column: span 2;
+  }
+  &__span-full {
+    grid-column: 1 / -1;
+  }
+  &__group {
+    flex-direction: column;
+  }
+  &__group > .components-base-control {
+    width: 100%;
+  }
+  @media screen and (min-width: 1200px) {
+    &__12 {
+      grid-template-columns: 1fr 1fr;
+    }
+    &__24 {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+  }
+}
+
 // Global editor elements
 .cns-elements {
   // Buttons
@@ -46,9 +95,9 @@
     margin-top: 0.5rem;
   }
 
-  &__icon-stroke {
-    fill: none !important;
-    stroke: currentColor !important;
+  // @wordpress/icons are fill-based.
+  &__icon {
+    fill: currentColor;
   }
   @media screen and (min-width: 768px) {
     &__modal {

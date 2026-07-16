@@ -1,6 +1,8 @@
+import { useState, useRef, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import { decodeEntities } from "@wordpress/html-entities";
-import { SelectControl } from "../../types/wp-components";
+import { ComboboxControl, SelectControl } from "../../types/wp-components";
+import { usePublishedPosts } from "../hooks/usePostPicker";
 import type { SelectOption, WPPostRecord } from "../../types/wordpress";
 
 interface PostQuickSelectProps {
@@ -11,15 +13,14 @@ interface PostQuickSelectProps {
   postType: string;
   postTypeOptions: SelectOption[];
   onPostTypeChange: (value: string) => void;
-  /** `null` while loading; `[]` when none found. */
-  posts: WPPostRecord[] | null;
   onPick: (post: WPPostRecord) => void;
 }
 
 /**
- * A post-type selector plus a scrollable list of that type's published posts.
- * Clicking a post calls `onPick` — callers decide what to do with it (set a
- * URL, a label, etc.).
+ * A post-type selector plus a searchable ComboboxControl over that type's
+ * published posts (fetched via the core-data store; typing narrows the query
+ * server-side). Picking a post calls `onPick` — callers decide what to do
+ * with it (set a URL, a label, etc.).
  */
 export function PostQuickSelect({
   heading,
@@ -27,9 +28,25 @@ export function PostQuickSelect({
   postType,
   postTypeOptions,
   onPostTypeChange,
-  posts,
   onPick,
 }: PostQuickSelectProps) {
+  const [search, setSearch] = useState("");
+  const timer = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) window.clearTimeout(timer.current);
+    },
+    [],
+  );
+
+  const posts = usePublishedPosts(postType, search);
+
+  const options = (posts ?? []).map((post) => ({
+    value: String(post.id),
+    label: decodeEntities(post.title?.rendered || post.slug),
+  }));
+
   return (
     <div className="cns-picker">
       {heading && <p className="cns-picker__heading">{heading}</p>}
@@ -40,26 +57,26 @@ export function PostQuickSelect({
         onChange={onPostTypeChange}
         __next40pxDefaultSize
       />
-      <div className="cns-picker__list">
-        {posts === null && (
-          <p className="cns-picker__status">{__("Loading…", "cns-theme")}</p>
-        )}
-        {posts?.length === 0 && (
-          <p className="cns-picker__status">
-            {__("No published items found.", "cns-theme")}
-          </p>
-        )}
-        {posts?.map((post) => (
-          <button
-            key={post.id}
-            type="button"
-            className="cns-picker__item"
-            onClick={() => onPick(post)}
-          >
-            {decodeEntities(post.title?.rendered || post.slug)}
-          </button>
-        ))}
-      </div>
+      <ComboboxControl
+        label={__("Post", "cns-theme")}
+        placeholder={
+          posts === null
+            ? __("Loading…", "cns-theme")
+            : __("Search or browse…", "cns-theme")
+        }
+        value={null}
+        options={options}
+        onFilterValueChange={(input) => {
+          if (timer.current) window.clearTimeout(timer.current);
+          timer.current = window.setTimeout(() => setSearch(input), 300);
+        }}
+        onChange={(value) => {
+          const post = (posts ?? []).find((p) => String(p.id) === value);
+          if (post) onPick(post);
+        }}
+        __next40pxDefaultSize
+        __nextHasNoMarginBottom
+      />
     </div>
   );
 }

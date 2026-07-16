@@ -25,10 +25,7 @@ import type { BlockEditProps } from "@wordpress/blocks";
 import type { CSSProperties, ReactElement } from "react";
 import type { SelectOption, WPPostRecord } from "../../types/wordpress";
 import { PostQuickSelect } from "../../shared/components/PostQuickSelect";
-import {
-  usePostTypeOptions,
-  usePublishedPosts,
-} from "../../shared/hooks/usePostPicker";
+import { usePostTypeOptions } from "../../shared/hooks/usePostPicker";
 import "./editor.scss";
 
 type SidebarItemType = "link" | "group";
@@ -156,7 +153,6 @@ export default function Edit({
   // ── Data fetching ──────────────────────────────────────────────────────────
 
   const postTypeOptions = usePostTypeOptions();
-  const quickSelectPosts = usePublishedPosts(quickSelectType);
 
   // ── Modal handlers ──────────────────────────────────────────────────────────
 
@@ -459,7 +455,6 @@ export default function Edit({
                   postType={quickSelectType}
                   postTypeOptions={postTypeOptions}
                   onPostTypeChange={setQuickSelectType}
-                  posts={quickSelectPosts}
                   onPick={applyQuickSelect}
                 />
 

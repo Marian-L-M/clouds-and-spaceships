@@ -18,6 +18,9 @@
   margin: 0;
   padding: 0 1rem;
   overflow-y: scroll;
+  height: fit-content;
+  max-width: 100%;
+
   &__wrapper {
     min-height: 40rem;
     padding: 0;
@@ -100,13 +103,17 @@
   }
   .cns-col {
     order: unset;
+    height: 100%;
+    &__side:not(.cns-col__sidebar),
+    &__center {
+      padding-bottom: 10rem;
+    }
     &__wrapper {
-      min-height: unset;
+      // height: fit-content;
       height: calc(100vh - var(--wp--custom--header--height, 5rem));
+      overflow: hidden;
       gap: 4rem 1rem;
     }
-    // Inner columns (center + infobox) form their own full-height row so each
-    // column keeps its independent scroll, mirroring the old flat layout.
     &__inner-wrapper {
       flex-wrap: nowrap;
       height: 100%;

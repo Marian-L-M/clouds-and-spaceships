@@ -5,8 +5,6 @@
 }
 
 .fancy-title {
-  // ── Branded mode ─────────────────────────────────────────────────────────────
-
   &--branded {
     // mode-specific overrides slot here in future
   }
@@ -15,9 +13,9 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: var( --fancy-title-image-width, 200px ) 1fr;
+    grid-template-columns: var(--fancy-title-image-width, 200px) 1fr;
     align-items: center;
-    gap: var( --fancy-title-column-gap, 24px );
+    gap: var(--fancy-title-column-gap, 24px);
   }
 
   // ── Image column ─────────────────────────────────────────────────────────────
@@ -30,9 +28,9 @@
     }
 
     &.has-vertical-divider {
-      border-right: var( --fancy-title-divider-thickness, 1px ) solid
-        var( --fancy-title-divider-color, #000 );
-      padding-right: var( --fancy-title-column-gap, 24px );
+      border-right: var(--fancy-title-divider-thickness, 1px) solid
+        var(--fancy-title-divider-color, #000);
+      padding-right: var(--fancy-title-column-gap, 24px);
     }
   }
 
@@ -42,8 +40,6 @@
     display: flex;
     flex-direction: column;
 
-    // Strip default block margins so inner blocks stack tightly inside the flex column.
-    // Editors can use the separator block for intentional spacing.
     > * {
       margin-block: 0;
     }
@@ -51,5 +47,8 @@
     > * + * {
       margin-block-start: 0.25rem;
     }
+  }
+  .wp-block-heading {
+    margin: 0;
   }
 }

@@ -31,8 +31,11 @@
 - Theme options page to:
   - Enable author page
   - Enable comment block
+- Create a list of all theme functionality
+- Who owns icon library?
+- User profile page
 
-Block development
+## Block development
 
 - unify cns-theme blocks into multiblock
 - comment block & add functionality

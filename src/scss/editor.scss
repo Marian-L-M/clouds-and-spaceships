@@ -30,6 +30,9 @@
   &__span-2 {
     grid-column: span 2;
   }
+  &__span-3 {
+    grid-column: span 3;
+  }
   &__span-full {
     grid-column: 1 / -1;
   }

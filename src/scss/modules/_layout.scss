@@ -14,9 +14,16 @@
   overflow: scroll;
 }
 
+.cns-story-fullscreen-open {
+  #cns-layout-wrapper {
+    z-index: 2000;
+  }
+}
+
 .cns-col {
   margin: 0;
   padding: 0 1rem;
+  overflow: visible;
   overflow-y: scroll;
   height: fit-content;
   max-width: 100%;
@@ -131,4 +138,10 @@
       max-width: var(--wp--custom--layout--col-wiki);
     }
   }
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
